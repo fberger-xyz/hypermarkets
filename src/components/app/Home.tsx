@@ -32,9 +32,12 @@ export default function Home() {
                 >
                     <FileMapper id={protocolConfig.name} className="size-8 rounded-lg bg-[#CBEBE5]" />
                     <p className="font-bold text-xl">{protocolConfig.name}</p>
+
+                    {/* todo: urls */}
                     <LinkWrapper href={protocolConfig.urls.docs} target="_blank" className="cursor-alias hover:underline">
                         docs
                     </LinkWrapper>
+
                     <StyledTooltip placement="top" closeDelay={100} content={<IframeWrapper src={protocolConfig.urls.website} />}>
                         <LinkWrapper
                             href={protocolConfig.urls.website}
