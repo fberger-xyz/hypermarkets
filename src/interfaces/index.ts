@@ -1,2 +1,4 @@
 export * from './app.interface'
 export * from './hyperscan.interface'
+export * from './protocols/hyperlend.interface'
+export * from './protocols/market.interface'

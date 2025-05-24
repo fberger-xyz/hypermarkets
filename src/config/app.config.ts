@@ -5,13 +5,13 @@ import resolveConfig from 'tailwindcss/resolveConfig'
 import type { Config } from 'tailwindcss'
 import tailwindConfig from '../../tailwind.config'
 import { DefaultColors } from 'tailwindcss/types/generated/colors'
-import { SupportedExplorers } from '@/enums/hyperevm.enum'
+import { SupportedExplorers } from '@/enums'
 
 /**
  * const
  */
 
-export const SITE_NAME = 'HyperAPYs'
+export const SITE_NAME = 'HyperMarkets'
 export const IS_DEV = process.env.NODE_ENV === 'development'
 export const SITE_DOMAIN = IS_DEV ? 'http://localhost:3000' : `https://www.${SITE_NAME}.fyi`
 export const SITE_URL = SITE_DOMAIN.replace('www.', '')

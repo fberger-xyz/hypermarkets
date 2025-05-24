@@ -1,3 +1,5 @@
+import { SupportedUnderlyingAssetSymbols } from '@/enums'
+
 export interface HyperscanToken {
     address: string
     circulating_market_cap: null
@@ -10,4 +12,20 @@ export interface HyperscanToken {
     total_supply: null | string
     type: string
     volume_24h: null
+
+    // adding
+    underlying: SupportedUnderlyingAssetSymbols
+}
+
+export interface HyperswapToken {
+    name: string
+    decimals: number
+    symbol: string
+    address: string
+    chainId: number
+    logoURI: string
+    tags: string[]
+
+    // adding
+    underlying: SupportedUnderlyingAssetSymbols
 }

@@ -28,22 +28,26 @@ export default function Footer(props: { className?: string }) {
     return (
         <footer
             className={cn(
-                'w-full flex flex-col items-center lg:flex-row lg:justify-between lg:items-end py-4 px-8 font-light text-xs gap-1 opacity-50 hover:opacity-100 transition-all duration-300 ease-in-out',
+                'w-full flex flex-col items-center lg:flex-row lg:justify-between lg:items-end py-4 px-8 font-light text-xs gap-1',
                 props.className,
             )}
         >
             {/* left */}
             <div className="flex flex-col gap-1 lg:gap-8 lg:flex-row items-center">
-                <p className="truncate">2025 © {SITE_URL.replace('https://', '')}</p>
+                <p className="truncate opacity-50 hover:opacity-100 transition-all duration-300 ease-in-out">
+                    2025 © {SITE_URL.replace('https://', '')}
+                </p>
                 <StyledTooltip closeDelay={500} content={<p>Deployed on {dayjs.utc(commitDate).format('D MMM. YYYY HH:mm A')} UTC</p>}>
-                    <p>Deployed {getDurationBetween({ startTs: dayjs.utc(commitDate).unix(), endTs: dayjs.utc().unix() }).humanize} ago</p>
+                    <p className="opacity-50 hover:opacity-100 transition-all duration-300 ease-in-out">
+                        Last deployed: {getDurationBetween({ startTs: dayjs.utc(commitDate).unix(), endTs: dayjs.utc().unix() }).humanize} ago
+                    </p>
                 </StyledTooltip>
             </div>
 
             {/* right */}
             <div className="flex flex-col lg:flex-row gap-1 lg:gap-8 items-center">
                 {/* author */}
-                <p className="">
+                <p className="opacity-50 hover:opacity-100 transition-all duration-300 ease-in-out">
                     Made by
                     <StyledTooltip placement="top" closeDelay={500} content={<IframeWrapper src={AppUrls.AUTHOR_WEBSITE} />}>
                         <LinkWrapper href={AppUrls.AUTHOR_WEBSITE} target="_blank" className="cursor-alias hover:underline hover:text-primary pl-1">
@@ -53,7 +57,11 @@ export default function Footer(props: { className?: string }) {
                 </p>
 
                 {/* hl */}
-                <LinkWrapper href={AppUrls.HL_APP} target="_blank" className="flex items-center gap-1 cursor-alias hover:underline">
+                <LinkWrapper
+                    href={AppUrls.HL_APP}
+                    target="_blank"
+                    className="flex items-center gap-1 cursor-alias hover:underline opacity-50 hover:opacity-100 transition-all duration-300 ease-in-out"
+                >
                     <p className="truncate">Hyperliquid</p>
                     <IconWrapper id={IconIds.OPEN_LINK_IN_NEW_TAB} className="size-4" />
                 </LinkWrapper>

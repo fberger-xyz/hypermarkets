@@ -1,54 +1,262 @@
 'use client'
 
 import { useQueries } from '@tanstack/react-query'
-import { APP_PROTOCOLS } from '@/config/protocols.config'
-import { cn } from '@/utils'
-import StyledTooltip from '../common/StyledTooltip'
-import LinkWrapper from '../common/LinkWrapper'
-import IframeWrapper from '../common/IframeWrapper'
+import { useEffect, useRef, useState } from 'react'
+import { fetchAllMarkets } from '@/utils/markets.util'
+import { useAppStore } from '@/stores/app.store'
+import { FilterSection, FilterWrapper } from './Filters'
+import { IconIds, SupportedProtocolNames, SupportedUnderlyingAssetSymbols } from '@/enums'
 import FileMapper from '../icons/FileMapper'
+import { Market } from '@/interfaces'
+import { cn } from '@/utils'
+import UpdatedAt from './UpdatedAt'
+import numeral from 'numeral'
+import AscDescFilters from './AscDescFilters'
+import TokenImage from './TokenImage'
+import LinkWrapper from '../common/LinkWrapper'
+import IconWrapper from '../common/IconWrapper'
+import { APP_PROTOCOLS } from '@/config/protocols.config'
+import StyledTooltip from '../common/StyledTooltip'
 
 export default function Home() {
+    const { uiAssets, uiProtocols, setMarkets, getMarkets, toggleUiUnderlyingAsset, toggleUiProtocol } = useAppStore()
+    const [filteredMarkets, setFilteredMarkets] = useState<Market[]>([])
+    const isFetchingRef = useRef(false)
     useQueries({
         queries: [
             {
-                queryKey: ['TBA'],
+                queryKey: ['markets'],
                 enabled: true,
                 queryFn: async () => {
-                    return null
+                    const debug = false
+                    if (isFetchingRef.current) return console.log('⚠️ Already fetching, skipping this call.')
+                    try {
+                        isFetchingRef.current = true
+                        if (debug) console.log('📡 Fetching new data...')
+                        const markets = await fetchAllMarkets()
+                        setMarkets(markets)
+                        return markets
+                    } catch (error) {
+                        console.log({ error })
+                    } finally {
+                        if (debug) console.log('🔄 Cleaning up fetch state.')
+                        isFetchingRef.current = false
+                    }
                 },
-                refetchOnWindowFocus: false,
-                refetchInterval: 1000 * 60 * 5,
+                refetchOnWindowFocus: true,
+                refetchInterval: 1000 * 30,
             },
         ],
     })
+    useEffect(() => {
+        const filteredMarkets = getMarkets().filter((market) => uiProtocols[market.protocol] && uiAssets[market.token.underlying])
+        setFilteredMarkets(filteredMarkets)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [uiAssets, uiProtocols])
+
+    /**
+     * - 1 centered row with last update: ...
+     * - 1 cool table
+     * - 1 cool bg: https://drip.trade/collections/hypio
+     * - powered by evm
+     */
 
     return (
-        <div className="flex flex-col gap-2 p-2 w-full">
-            {Object.values(APP_PROTOCOLS).map((protocolConfig) => (
-                <div
-                    key={protocolConfig.name}
-                    className={cn('flex items-center gap-3 bg-default/5 p-3 rounded-xl', { grayscale: protocolConfig.integrated })}
-                >
-                    <FileMapper id={protocolConfig.name} className="size-8 rounded-lg bg-[#CBEBE5]" />
-                    <p className="font-bold text-xl">{protocolConfig.name}</p>
-
-                    {/* todo: urls */}
-                    <LinkWrapper href={protocolConfig.urls.docs} target="_blank" className="cursor-alias hover:underline">
-                        docs
-                    </LinkWrapper>
-
-                    <StyledTooltip placement="top" closeDelay={100} content={<IframeWrapper src={protocolConfig.urls.website} />}>
-                        <LinkWrapper
-                            href={protocolConfig.urls.website}
-                            target="_blank"
-                            className="cursor-alias hover:underline hover:text-primary pl-1"
+        <div className="flex flex-col w-full gap-10">
+            {/* filters */}
+            <div className="flex flex-wrap gap-10 mx-auto">
+                {/* filters */}
+                <FilterSection title="Assets exposure">
+                    {(Object.keys(uiAssets) as SupportedUnderlyingAssetSymbols[]).map((key, keyIndex) => (
+                        <FilterWrapper
+                            key={`${key}-${keyIndex}`}
+                            onClick={() => toggleUiUnderlyingAsset(key)}
+                            isActive={Boolean(uiAssets[key])}
+                            tooltipContent={<p>{key}</p>}
                         >
-                            website
-                        </LinkWrapper>
-                    </StyledTooltip>
+                            <FileMapper id={key} className="size-7 rounded-full" />
+                        </FilterWrapper>
+                    ))}
+                </FilterSection>
+
+                {/* - */}
+                <FilterSection title="HyperEVM money markets">
+                    {(Object.keys(uiProtocols) as SupportedProtocolNames[]).map((key, keyIndex) => (
+                        <FilterWrapper
+                            key={`${key}-${keyIndex}`}
+                            onClick={() => toggleUiProtocol(key)}
+                            isActive={Boolean(uiProtocols[key])}
+                            tooltipContent={
+                                <div className="flex flex-col items-center">
+                                    <p>{key}</p>
+                                    {/* <p className="underline text-default/50 mb-2">
+                                        {APP_PROTOCOLS[key]?.urls.website?.replace('https://', '').replace('www.', '')}
+                                    </p> */}
+                                </div>
+                            }
+                        >
+                            <FileMapper id={key} className="size-7 rounded-full" />
+                        </FilterWrapper>
+                    ))}
+                </FilterSection>
+            </div>
+
+            {/* content */}
+            <div className="flex flex-col gap-6">
+                <UpdatedAt />
+                <div className="flex flex-col border rounded-xl border-default/10 overflow-hidden shadow-lg">
+                    {/* headers */}
+                    <div className="gap-2 px-2 py-2 grid grid-cols-10 items-center text-default text-xs border-b border-default/10 pb-1">
+                        <div className="flex justify-center items-center">
+                            <p>#</p>
+                        </div>
+                        <button className="flex justify-center items-center">
+                            <p>Asset</p>
+                        </button>
+                        <button className="flex justify-center items-center">
+                            <p>Protocol</p>
+                        </button>
+                        <button className="flex justify-center items-center">
+                            <p>Type</p>
+                        </button>
+                        <button className="flex justify-center items-center">
+                            <p>Supplied</p>
+                            <AscDescFilters />
+                        </button>
+                        <button className="flex justify-center items-center">
+                            <p>Supply APY</p>
+                            <AscDescFilters />
+                        </button>
+                        <button className="flex justify-center items-center">
+                            <p>Borrowed</p>
+                            <AscDescFilters />
+                        </button>
+                        <button className="flex justify-center items-center">
+                            <p>Borrow APY</p>
+                            <AscDescFilters />
+                        </button>
+                        <button className="flex justify-center items-center">
+                            <p>Usage %</p>
+                            <AscDescFilters />
+                        </button>
+                        <button className="flex justify-center items-center">
+                            <p>Link</p>
+                        </button>
+                    </div>
+
+                    {/* content */}
+                    {filteredMarkets.map((market, marketIndex) => (
+                        <div
+                            key={`${marketIndex}-${market.protocol}`}
+                            className={cn('px-2 py-1.5 grid grid-cols-10 items-center hover:bg-primary/20 font-light', {
+                                'bg-default/5': marketIndex % 2,
+                            })}
+                        >
+                            <div className="flex justify-center">
+                                <p className="text-xs">{marketIndex + 1}</p>
+                            </div>
+                            <div className="flex justify-center">
+                                <div className="flex gap-2 items-center rounded-xl bg-default/10 py-1 px-1.5">
+                                    <TokenImage token={market.token} className="size-5 rounded-full bg-background" />
+                                    <p className="text-sm w-max truncate font-light text-primary">{market.token.symbol}</p>
+                                </div>
+                            </div>
+                            <div className="flex justify-center">
+                                {/* <StyledTooltip
+                                    content={<IframeWrapper src={APP_PROTOCOLS[market.protocol]?.urls.website} />}
+                                    disableAnimation
+                                    closeDelay={200}
+                                > */}
+                                <div className="flex gap-2 items-center rounded-xl bg-default/10 py-1 px-1.5">
+                                    <FileMapper id={market.protocol} className="size-5 rounded-full" />
+                                    <p className="text-sm w-max truncate font-light text-primary">{APP_PROTOCOLS[market.protocol]?.name}</p>
+                                </div>
+                                {/* </StyledTooltip> */}
+                            </div>
+                            <div className="flex justify-center">
+                                <p className="text-xs">{market.type}</p>
+                            </div>
+                            <div className="flex justify-center">
+                                <StyledTooltip
+                                    disableAnimation
+                                    content={<p className="text-sm">{numeral(market.state.supply.usd).format('0,0.00$')}</p>}
+                                >
+                                    <p className="text-sm">{numeral(market.state.supply.usd).format('0,0a$')}</p>
+                                </StyledTooltip>
+                            </div>
+                            <div className="flex justify-center">
+                                <div className="flex gap-2 items-center rounded-xl bg-default/10 py-1 px-1.5">
+                                    <p className="text-sm text-primary">{numeral(market.state.supply.apy).format('0,0.[00]%')}</p>
+                                </div>
+                            </div>
+                            <div className="flex justify-center">
+                                <StyledTooltip
+                                    disableAnimation
+                                    content={<p className="text-sm">{numeral(market.state.borrow.usd).format('0,0.00$')}</p>}
+                                >
+                                    <p className="text-sm">{numeral(market.state.borrow.usd).format('0,0a$')}</p>
+                                </StyledTooltip>
+                            </div>
+                            <div className="flex justify-center">
+                                <div className="flex gap-2 items-center rounded-xl bg-default/10 py-1 px-1.5">
+                                    <p className="text-sm text-primary">{numeral(market.state.borrow.apy).format('0,0.[00]%')}</p>
+                                </div>
+                            </div>
+                            <div className="flex justify-center">
+                                <p className="text-sm">{numeral(market.state.usage).format('0,0%')}</p>
+                            </div>
+                            <div className="flex justify-center">
+                                <LinkWrapper
+                                    href={market.link}
+                                    target="_blank"
+                                    className="flex justify-center opacity-50 hover:opacity-100 hover:text-primary hover:bg-default/10 px-2 py-1.5 rounded-lg"
+                                >
+                                    <IconWrapper id={IconIds.WEBSITE} className="size-4" />
+                                </LinkWrapper>
+                            </div>
+                        </div>
+                    ))}
+
+                    {/* totals */}
+                    <div className="px-2 py-1.5 grid grid-cols-10 items-center hover:bg-primary/20 h-10 text-xs text-primary font-light pt-1">
+                        <div className="flex justify-start col-span-3">
+                            <p>Totals or weighted averages</p>
+                        </div>
+                        <span />
+                        <div className="flex justify-center">
+                            <StyledTooltip
+                                disableAnimation
+                                content={<p>{numeral(filteredMarkets.reduce((acc, curr) => (acc += curr.state.supply.usd), 0)).format('0,0.00')}</p>}
+                            >
+                                <p>{numeral(filteredMarkets.reduce((acc, curr) => (acc += curr.state.supply.usd), 0)).format('0,0a$')}</p>
+                            </StyledTooltip>
+                        </div>
+                        <div className="flex justify-center">
+                            <p>
+                                {numeral(filteredMarkets.reduce((acc, curr) => (acc += curr.state.supply.usd * curr.state.supply.apy), 0))
+                                    .divide(filteredMarkets.reduce((acc, curr) => (acc += curr.state.supply.usd), 0))
+                                    .format('0,0.[00]%')}
+                            </p>
+                        </div>
+                        <div className="flex justify-center">
+                            <StyledTooltip
+                                disableAnimation
+                                content={<p>{numeral(filteredMarkets.reduce((acc, curr) => (acc += curr.state.borrow.usd), 0)).format('0,0.00')}</p>}
+                            >
+                                <p>{numeral(filteredMarkets.reduce((acc, curr) => (acc += curr.state.borrow.usd), 0)).format('0,0a$')}</p>
+                            </StyledTooltip>
+                        </div>
+                        <div className="flex justify-center">
+                            <p>
+                                {numeral(filteredMarkets.reduce((acc, curr) => (acc += curr.state.borrow.usd * curr.state.borrow.apy), 0))
+                                    .divide(filteredMarkets.reduce((acc, curr) => (acc += curr.state.borrow.usd), 0))
+                                    .format('0,0.[00]%')}
+                            </p>
+                        </div>
+                        <span />
+                    </div>
                 </div>
-            ))}
+            </div>
         </div>
     )
 }

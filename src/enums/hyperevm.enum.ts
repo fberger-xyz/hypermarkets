@@ -2,7 +2,7 @@
 export enum SupportedProtocolNames {
     HYPERLEND = 'Hyperlend',
     FELIX = 'Felix',
-    HYPURRRFI = 'HypurrrFi',
+    HYPURRFI = 'HypurrFi',
     MORPHO = 'Morpho',
     HYPERSWAP = 'HyperSwap',
     HYPERBEAT = 'Hyperbeat',
@@ -18,4 +18,12 @@ export enum DefiLlamaCategories {
 export enum SupportedExplorers {
     PURRSEC = 'purrsec',
     HYPERSCAN = 'hyperscan',
+}
+
+export enum SupportedUnderlyingAssetSymbols {
+    HYPE = 'HYPE',
+    BTC = 'BTC',
+    ETH = 'ETH',
+    USD = 'USD',
+    OTHERS = 'OTHERS',
 }

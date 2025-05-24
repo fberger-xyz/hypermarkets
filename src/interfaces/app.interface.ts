@@ -9,5 +9,4 @@ export interface StructuredOutput<Data> {
     success: boolean
     data?: Data
     error: string
-    ts: number
 }
