@@ -13,7 +13,7 @@ import { SupportedExplorers } from '@/enums'
 
 export const SITE_NAME = 'HyperMarkets'
 export const IS_DEV = process.env.NODE_ENV === 'development'
-export const SITE_DOMAIN = IS_DEV ? 'http://localhost:3000' : `https://www.${SITE_NAME}.fyi`
+export const SITE_DOMAIN = IS_DEV ? 'http://localhost:3000' : `https://${SITE_NAME.toLowerCase()}.fberger.xyz`
 export const SITE_URL = SITE_DOMAIN.replace('www.', '')
 export const APP_METADATA = {
     SITE_NAME,
