@@ -1,6 +1,9 @@
 'use client'
 
 import { useState } from 'react'
+import LinkWrapper from './LinkWrapper'
+import { IconIds } from '@/enums'
+import IconWrapper from './IconWrapper'
 
 const IframeWrapper: React.FC<{
     src?: string
@@ -16,6 +19,14 @@ const IframeWrapper: React.FC<{
                 </div>
             )}
             <iframe src={src} className={`absolute left-0 top-0 z-10 rounded-xl ${width} ${height}`} onLoad={() => setIsLoading(false)} />
+            <LinkWrapper
+                href={src}
+                target="_blank"
+                className="flex justify-center px-2 py-1.5 hover:text-primary absolute right-4 bottom-4 z-50 bg-default/5 hover:bg-default/10 rounded-lg items-center gap-2 transition-all duration-300 ease-in-out"
+            >
+                <p className="font-light">Open page in a new tab</p>
+                <IconWrapper id={IconIds.OPEN_LINK_IN_NEW_TAB} className="size-4" />
+            </LinkWrapper>
         </div>
     )
 }
