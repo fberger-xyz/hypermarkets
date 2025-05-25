@@ -12,7 +12,6 @@ import LinkWrapper from '../common/LinkWrapper'
 import { AppUrls, IconIds } from '@/enums'
 import IframeWrapper from '../common/IframeWrapper'
 import StyledTooltip from '../common/StyledTooltip'
-import { SITE_URL } from '@/config/app.config'
 import IconWrapper from '../common/IconWrapper'
 import DeployedAt from '../app/DeployedAt'
 
@@ -35,9 +34,9 @@ export default function Footer(props: { className?: string }) {
         >
             {/* left */}
             <div className="flex flex-col gap-1 lg:gap-8 lg:flex-row items-center">
-                <p className="truncate opacity-50 hover:opacity-100 transition-all duration-300 ease-in-out">
+                {/* <p className="truncate opacity-50 hover:opacity-100 transition-all duration-300 ease-in-out">
                     2025 © {SITE_URL.replace('https://', '')}
-                </p>
+                </p> */}
                 <DeployedAt commitDate={commitDate} />
             </div>
 
