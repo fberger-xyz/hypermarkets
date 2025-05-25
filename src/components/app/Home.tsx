@@ -46,15 +46,18 @@ export default function Home() {
         ],
     })
     useEffect(() => {
-        const filteredMarkets = getMarkets().filter((market) => uiProtocols[market.protocol] && uiAssets[market.token.underlying])
+        const filteredMarkets = getMarkets()
+            .filter((market) => uiProtocols[market.protocol] && uiAssets[market.token.underlying])
+            .sort((curr, next) => next.state.supply.usd - curr.state.supply.usd)
         setFilteredMarkets(filteredMarkets)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [uiAssets, uiProtocols])
 
     /**
-     * - 1 cool table
+     * - 1 cool table: code arrows
      * - 1 cool bg: https://drip.trade/collections/hypio
      * - powered by evm
+     * - add liminal ?
      */
 
     return (
@@ -84,7 +87,7 @@ export default function Home() {
                                     <LinkWrapper
                                         href={APP_PROTOCOLS[key]?.urls.website}
                                         target="_blank"
-                                        className="flex justify-center px-2 py-1.5 rounded-lg hover:text-primary"
+                                        className="flex justify-center px-2 py-1 rounded-lg hover:text-primary"
                                     >
                                         <p className="underline">{APP_PROTOCOLS[key]?.urls.website}</p>
                                     </LinkWrapper>
@@ -118,7 +121,7 @@ export default function Home() {
                             </button>
                             <button className="flex justify-center items-center">
                                 <p>Supplied</p>
-                                <AscDescFilters />
+                                <AscDescFilters down={true} />
                             </button>
                             <button className="flex justify-center items-center">
                                 <p>Supply APY</p>
@@ -255,6 +258,13 @@ export default function Home() {
                             <span />
                         </div>
                     </div>
+
+                    <br />
+                    {filteredMarkets.length === 0 && (
+                        <div className="w-full">
+                            <p className="font-light mx-auto text-center text-red-500">No markets ? Refresh page</p>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
