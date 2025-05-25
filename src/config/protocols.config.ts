@@ -83,7 +83,7 @@ export const APP_PROTOCOLS: Partial<
 
         // app
         index: 1,
-        integrated: true,
+        integrated: false,
 
         // defillama
         defillama: {
@@ -148,7 +148,7 @@ export const APP_PROTOCOLS: Partial<
 
         // app
         index: 3,
-        integrated: true,
+        integrated: false,
 
         // defillama
         defillama: {
@@ -188,6 +188,30 @@ export const APP_PROTOCOLS: Partial<
             started: true,
             url: 'https://app.hyperbeat.org/earn#hearts',
         },
+    },
+    [SupportedProtocolNames.LIMINAL]: {
+        // meta
+        name: SupportedProtocolNames.LIMINAL,
+        urls: {
+            website: 'https://liminal.money',
+            x: 'https://x.com/liminalmoney',
+            telegram: 'https://t.me/liminalmoney',
+            docs: 'https://docs.liminal.money/',
+            discord: 'https://discord.com/invite/mEg5xTdXQv',
+        },
+
+        // app
+        index: 5,
+        integrated: false,
+
+        // defillama
+        defillama: {
+            protocolId: '',
+            category: DefiLlamaCategories.YIELD,
+        },
+
+        // points program
+        // tba
     },
 }
 

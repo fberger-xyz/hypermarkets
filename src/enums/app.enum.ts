@@ -4,6 +4,7 @@ export enum AppUrls {
     REFERRALS = '/referrals',
 
     // HL
+    HYPERUNIT = 'https://app.hyperunit.xyz/',
     HL_APP = 'https://app.hyperliquid.xyz/trade',
 
     // fberger

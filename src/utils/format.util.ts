@@ -7,6 +7,8 @@ export const cleanOutput = (output: string | number, defaultOutput = '-'): strin
     const strOutput = String(output).replaceAll('~', '').replaceAll(' ', '')
     if (strOutput === '0') return defaultOutput
     if (strOutput === '0%') return defaultOutput
+    if (strOutput === '0$') return defaultOutput
+    if (strOutput === '0k$') return defaultOutput
     if (strOutput === '0m$') return defaultOutput
     if (strOutput === 'NaN') return defaultOutput
     return String(output)

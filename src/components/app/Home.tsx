@@ -5,10 +5,10 @@ import { useEffect, useState } from 'react'
 import { fetchAllMarkets } from '@/utils/markets.util'
 import { useAppStore } from '@/stores/app.store'
 import { FilterSection, FilterWrapper } from './Filters'
-import { IconIds, SupportedProtocolNames, SupportedUnderlyingAssetSymbols } from '@/enums'
+import { IconIds, SupportedExplorers, SupportedProtocolNames, SupportedUnderlyingAssetSymbols } from '@/enums'
 import FileMapper from '../icons/FileMapper'
 import { Market } from '@/interfaces'
-import { cn, extractErrorMessage } from '@/utils'
+import { cleanOutput, cn, extractErrorMessage } from '@/utils'
 import UpdatedAt from './UpdatedAt'
 import numeral from 'numeral'
 import AscDescFilters from './AscDescFilters'
@@ -79,16 +79,22 @@ export default function Home() {
                         <FilterWrapper
                             key={`${key}-${keyIndex}`}
                             onClick={() => toggleUiProtocol(key)}
+                            integrated={Boolean(APP_PROTOCOLS[key]?.integrated)}
                             isActive={Boolean(uiProtocols[key])}
                             tooltipContent={
-                                <div className="flex flex-col items-center">
+                                <div className="flex flex-col gap-1 items-center">
+                                    <p className="text-primary font-bold">{key}</p>
                                     <LinkWrapper
-                                        href={APP_PROTOCOLS[key]?.urls.website}
+                                        href={APP_PROTOCOLS[key]?.urls.ref ?? APP_PROTOCOLS[key]?.urls.website}
                                         target="_blank"
-                                        className="flex justify-center px-2 py-1 rounded-lg hover:text-primary"
+                                        className={cn(
+                                            'flex justify-center hover:text-primary gap-1 border-b border-transparent hover:border-primary',
+                                        )}
                                     >
-                                        <p className="underline">{APP_PROTOCOLS[key]?.urls.website}</p>
+                                        <p>{APP_PROTOCOLS[key]?.urls.website}</p>
+                                        <IconWrapper id={IconIds.OPEN_LINK_IN_NEW_TAB} className="size-5" />
                                     </LinkWrapper>
+                                    {APP_PROTOCOLS[key]?.integrated ? <p>Integrated ✅</p> : <p className="opacity-50">Not yet integrated 🚧</p>}
                                 </div>
                             }
                         >
@@ -138,7 +144,7 @@ export default function Home() {
                                 <AscDescFilters />
                             </button>
                             <button className="flex justify-center items-center">
-                                <p>Link</p>
+                                <p>Links</p>
                             </button>
                         </div>
 
@@ -193,16 +199,22 @@ export default function Home() {
                                               disableAnimation
                                               content={<p className="text-sm">{numeral(market.state.borrow.usd).format('0,0.00$')}</p>}
                                           >
-                                              <p className="text-sm">{numeral(market.state.borrow.usd).format('0,0a$')}</p>
+                                              <p className="text-sm">{cleanOutput(numeral(market.state.borrow.usd).format('0,0a$'))}</p>
                                           </StyledTooltip>
                                       </div>
                                       <div className="flex justify-center">
-                                          <div className="flex gap-2 items-center rounded-xl bg-default/10 py-1 px-1.5">
-                                              <p className="text-sm text-primary">{numeral(market.state.borrow.apy).format('0,0.[00]%')}</p>
+                                          <div
+                                              className={cn('flex gap-2 items-center rounded-xl py-1 px-1.5', {
+                                                  'bg-default/10': market.state.borrow.apy !== 0,
+                                              })}
+                                          >
+                                              <p className="text-sm text-primary">
+                                                  {cleanOutput(numeral(market.state.borrow.apy).format('0,0.[00]%'))}
+                                              </p>
                                           </div>
                                       </div>
                                       <div className="flex justify-center">
-                                          <p className="text-sm">{numeral(market.state.usage).format('0,0%')}</p>
+                                          <p className="text-sm">{cleanOutput(numeral(market.state.usage).format('0,0%'))}</p>
                                       </div>
                                       <div className="flex justify-center">
                                           <StyledTooltip
@@ -215,9 +227,19 @@ export default function Home() {
                                                           target="_blank"
                                                           className="flex justify-center hover:text-primary bg-default/5 hover:bg-default/10 px-4 py-1.5 rounded-lg gap-1"
                                                       >
-                                                          <p className="text-sm">See this market on {market.protocol}</p>
+                                                          <p className="text-sm">See market on {market.protocol}</p>
                                                           <IconWrapper id={IconIds.OPEN_LINK_IN_NEW_TAB} className="size-4" />
                                                       </LinkWrapper>
+                                                      {market.protocol === SupportedProtocolNames.HYPERBEAT && (
+                                                          <LinkWrapper
+                                                              href={market.purrsec}
+                                                              target="_blank"
+                                                              className="flex justify-center hover:text-primary bg-default/5 hover:bg-default/10 px-4 py-1.5 rounded-lg gap-1"
+                                                          >
+                                                              <p className="text-sm">See vault on {SupportedExplorers.PURRSEC}</p>
+                                                              <IconWrapper id={IconIds.OPEN_LINK_IN_NEW_TAB} className="size-4" />
+                                                          </LinkWrapper>
+                                                      )}
                                                       {APP_PROTOCOLS[market.protocol]?.urls.ref ? (
                                                           <LinkWrapper
                                                               href={APP_PROTOCOLS[market.protocol]?.urls.ref}
@@ -230,10 +252,30 @@ export default function Home() {
                                                   </div>
                                               }
                                           >
-                                              <div className="flex justify-center opacity-50 hover:opacity-100 hover:text-primary hover:bg-default/10 px-2 py-1.5 rounded-lg cursor-pointer">
-                                                  <IconWrapper id={IconIds.WEBSITE} className="size-4" />
+                                              <div className="flex justify-center opacity-50 hover:opacity-100 hover:text-primary hover:bg-default/10 px-2 py-1.5 rounded-xl cursor-pointer">
+                                                  <IconWrapper id={IconIds.LINK} className="size-5" />
                                               </div>
                                           </StyledTooltip>
+                                          {/* <StyledTooltip
+                                              disableAnimation
+                                              closeDelay={800}
+                                              content={
+                                                  <div className="flex flex-col gap-1">
+                                                      <LinkWrapper
+                                                          href={`https://purrsec.com/address/${market.rawData.hyperlend.ad}`}
+                                                          target="_blank"
+                                                          className="flex justify-center hover:text-primary bg-default/5 hover:bg-default/10 px-4 py-1.5 rounded-lg gap-1"
+                                                      >
+                                                          <p className="text-sm">See this market on purrsec</p>
+                                                          <IconWrapper id={IconIds.OPEN_LINK_IN_NEW_TAB} className="size-4" />
+                                                      </LinkWrapper>
+                                                  </div>
+                                              }
+                                          >
+                                              <div className="flex justify-center opacity-50 hover:opacity-100 hover:text-primary hover:bg-default/10 px-2 py-1.5 rounded-lg cursor-pointer">
+                                                  <FileMapper id={SupportedExplorers.PURRSEC} className="size-4" />
+                                              </div>
+                                          </StyledTooltip> */}
                                       </div>
                                   </div>
                               ))
@@ -280,7 +322,7 @@ export default function Home() {
                               : null}
 
                         {/* totals */}
-                        {filteredMarkets.length === 0 && (
+                        {filteredMarkets.length > 0 && (
                             <div className="px-2 py-1.5 grid grid-cols-10 items-center hover:bg-primary/20 h-10 text-xs text-primary font-light pt-1">
                                 <div className="flex justify-start col-span-3">{/* <p>Totals or weighted averages</p> */}</div>
                                 <span />

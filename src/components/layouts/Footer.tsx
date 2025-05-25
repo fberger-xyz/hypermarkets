@@ -37,11 +37,7 @@ export default function Footer(props: { className?: string }) {
                 {/* <p className="truncate opacity-50 hover:opacity-100 transition-all duration-300 ease-in-out">
                     2025 © {SITE_URL.replace('https://', '')}
                 </p> */}
-                <DeployedAt commitDate={commitDate} />
-            </div>
 
-            {/* right */}
-            <div className="flex flex-col lg:flex-row gap-1 lg:gap-8 items-center">
                 {/* author */}
                 <p className="opacity-50 hover:opacity-100 transition-all duration-300 ease-in-out">
                     By
@@ -51,6 +47,22 @@ export default function Footer(props: { className?: string }) {
                         </LinkWrapper>
                     </StyledTooltip>
                 </p>
+
+                {/* ts */}
+                <DeployedAt commitDate={commitDate} />
+            </div>
+
+            {/* right */}
+            <div className="flex flex-col lg:flex-row gap-1 lg:gap-8 items-center">
+                {/* unit */}
+                <LinkWrapper
+                    href={AppUrls.HYPERUNIT}
+                    target="_blank"
+                    className="flex items-center gap-1 cursor-alias hover:underline opacity-50 hover:opacity-100 transition-all duration-300 ease-in-out"
+                >
+                    <p className="truncate">Hyperunit</p>
+                    <IconWrapper id={IconIds.OPEN_LINK_IN_NEW_TAB} className="size-4" />
+                </LinkWrapper>
 
                 {/* hl */}
                 <LinkWrapper

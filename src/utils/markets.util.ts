@@ -1,7 +1,7 @@
 import { SITE_DOMAIN } from '@/config/app.config'
 import { fetchWithTimeout, initOutput } from './requests.util'
 import { extractErrorMessage } from './error.util'
-import { MarketState, StructuredOutput } from '@/interfaces'
+import { EnrichedHyperbeatVault, EnrichedMorphobeatVault, MarketState, StructuredOutput } from '@/interfaces'
 import toast from 'react-hot-toast'
 import { AaveFormattedReserve } from '@/types'
 import { SupportedProtocolNames } from '@/enums'
@@ -19,7 +19,7 @@ export async function fetchHyperlendReserves(): Promise<StructuredOutput<AaveFor
         const responseJson = (await response.json()) as StructuredOutput<AaveFormattedReserve[]>
         output.data = responseJson.data
         output.success = true
-        toast.success(`${SupportedProtocolNames.HYPERLEND}: ${responseJson.data?.length} markets refreshed`)
+        if (output.data?.length) toast.success(`${SupportedProtocolNames.HYPERLEND}: ${output.data?.length} markets refreshed`)
     } catch (error) {
         output.error = extractErrorMessage(error)
         console.error(fnName, { error: output.error })
@@ -36,7 +36,24 @@ export async function fetchHypurrFiReserves(): Promise<StructuredOutput<AaveForm
         const responseJson = (await response.json()) as StructuredOutput<AaveFormattedReserve[]>
         output.data = responseJson.data
         output.success = true
-        toast.success(`${SupportedProtocolNames.HYPURRFI}: ${responseJson.data?.length} markets refreshed`)
+        if (output.data?.length) toast.success(`${SupportedProtocolNames.HYPURRFI}: ${output.data?.length} markets refreshed`)
+    } catch (error) {
+        output.error = extractErrorMessage(error)
+        console.error(fnName, { error: output.error })
+    }
+    return output
+}
+
+export async function fetchHyperbeatVaults(): Promise<StructuredOutput<(EnrichedHyperbeatVault | EnrichedMorphobeatVault)[]>> {
+    const fnName = 'fetchHyperbeatVaults'
+    const output = initOutput<(EnrichedHyperbeatVault | EnrichedMorphobeatVault)[]>()
+    try {
+        const response = await fetchWithTimeout(`${SITE_DOMAIN}/api/protocols/hyperbeat/vaults`)
+        if (!response.ok) throw new Error(`${fnName}: !response.ok`)
+        const responseJson = (await response.json()) as StructuredOutput<(EnrichedHyperbeatVault | EnrichedMorphobeatVault)[]>
+        output.data = responseJson.data?.filter((vault) => !!vault.address)
+        output.success = true
+        if (output.data?.length) toast.success(`${SupportedProtocolNames.HYPERBEAT}: ${output.data.length} vaults refreshed`)
     } catch (error) {
         output.error = extractErrorMessage(error)
         console.error(fnName, { error: output.error })
@@ -54,19 +71,26 @@ export const fetchAllMarkets = async () => {
     const output: {
         hyperlendReserves: AaveFormattedReserve[]
         hypurrfiReserves: AaveFormattedReserve[]
+        hyperbeatVaults: (EnrichedHyperbeatVault | EnrichedMorphobeatVault)[]
     } = {
         hyperlendReserves: [],
         hypurrfiReserves: [],
+        hyperbeatVaults: [],
     }
 
     // safe exec
     try {
         // hyperlend
-        const [hyperlendReserves, hypurrfiReserves] = await Promise.all([fetchHyperlendReserves(), fetchHypurrFiReserves()])
+        const [hyperlendReserves, hypurrfiReserves, hyperbeatVaults] = await Promise.all([
+            fetchHyperlendReserves(),
+            fetchHypurrFiReserves(),
+            fetchHyperbeatVaults(),
+        ])
 
         // set
         if (hyperlendReserves.data) output.hyperlendReserves = hyperlendReserves.data
         if (hypurrfiReserves.data) output.hypurrfiReserves = hypurrfiReserves.data
+        if (hyperbeatVaults.data) output.hyperbeatVaults = hyperbeatVaults.data
     } catch (error) {
         console.log(`${fnName}: unexpected error`, extractErrorMessage(error))
     }

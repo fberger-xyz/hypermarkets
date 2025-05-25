@@ -6,6 +6,7 @@ export enum SupportedProtocolNames {
     MORPHO = 'Morpho',
     HYPERSWAP = 'HyperSwap',
     HYPERBEAT = 'Hyperbeat',
+    LIMINAL = 'Liminal',
 }
 
 export enum DefiLlamaCategories {
@@ -26,4 +27,16 @@ export enum SupportedUnderlyingAssetSymbols {
     ETH = 'ETH',
     USD = 'USD',
     OTHERS = 'OTHERS',
+}
+
+export enum SupportedMarketTypes {
+    POOLED_LENDING = 'Pooled lending',
+    ISOLATED_LENDING = 'Isolated lending',
+    STABILITY_POOLS = 'Stability pools',
+    VAULTS = 'Vault',
+}
+
+export enum HyperbeatVaults {
+    NATIVE = 'Native',
+    MORPHO = 'Morpho',
 }

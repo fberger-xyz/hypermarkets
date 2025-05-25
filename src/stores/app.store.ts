@@ -3,8 +3,8 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import { APP_METADATA, IS_DEV } from '@/config/app.config'
-import { Market } from '@/interfaces'
-import { SupportedProtocolNames, SupportedUnderlyingAssetSymbols } from '@/enums'
+import { EnrichedHyperbeatVault, EnrichedMorphobeatVault, Market } from '@/interfaces'
+import { SupportedMarketTypes, SupportedProtocolNames, SupportedUnderlyingAssetSymbols } from '@/enums'
 import { hyperswapTokenList } from '@/data/hardcoded-tokens-list'
 import { AaveFormattedReserve } from '@/types'
 import { APP_PROTOCOLS, APP_UNDERLYINGS } from '@/config/protocols.config'
@@ -37,7 +37,12 @@ export const useAppStore = create<{
 
     hyperlendReserves: AaveFormattedReserve[]
     hypurrfiReserves: AaveFormattedReserve[]
-    setMarkets: (data: { hyperlendReserves: AaveFormattedReserve[]; hypurrfiReserves: AaveFormattedReserve[] }) => void
+    hyperbeatVaults: (EnrichedHyperbeatVault | EnrichedMorphobeatVault)[]
+    setMarkets: (data: {
+        hyperlendReserves: AaveFormattedReserve[]
+        hypurrfiReserves: AaveFormattedReserve[]
+        hyperbeatVaults: (EnrichedHyperbeatVault | EnrichedMorphobeatVault)[]
+    }) => void
 
     /**
      * computeds
@@ -67,7 +72,7 @@ export const useAppStore = create<{
                 .reduce((acc, underlying) => ({ ...acc, [underlying.symbol]: true }), {}),
             toggleUiUnderlyingAsset: (asset) => set((state) => ({ uiAssets: { ...state.uiAssets, [asset]: !state.uiAssets[asset] } })),
             uiProtocols: Object.values(APP_PROTOCOLS)
-                .filter((protocol) => protocol.integrated)
+                // .filter((protocol) => protocol.integrated)
                 .reduce((acc, protocol) => ({ ...acc, [protocol.name]: true }), {}),
             toggleUiProtocol: (protocol) => set((state) => ({ uiProtocols: { ...state.uiProtocols, [protocol]: !state.uiProtocols[protocol] } })),
 
@@ -77,10 +82,12 @@ export const useAppStore = create<{
 
             hyperlendReserves: [],
             hypurrfiReserves: [],
+            hyperbeatVaults: [],
             setMarkets: (data) =>
                 set(() => ({
                     hyperlendReserves: data.hyperlendReserves,
                     hypurrfiReserves: data.hypurrfiReserves,
+                    hyperbeatVaults: data.hyperbeatVaults,
                     appStoreRefreshedAt: Date.now(),
                 })),
 
@@ -100,7 +107,7 @@ export const useAppStore = create<{
                     const market = {
                         protocol: SupportedProtocolNames.HYPERLEND,
                         token,
-                        type: 'Pooled',
+                        type: SupportedMarketTypes.POOLED_LENDING,
                         rawData: {
                             hyperlend: hyperlendReserves[reserveIndex],
                         },
@@ -119,12 +126,36 @@ export const useAppStore = create<{
                     const market = {
                         protocol: SupportedProtocolNames.HYPURRFI,
                         token,
-                        type: 'Pooled',
+                        type: SupportedMarketTypes.POOLED_LENDING,
                         rawData: {
                             hypurrfi: hypurrfiReserves[reserveIndex],
                         },
                         state: getMarketStateForAaveForks(hypurrfiReserves[reserveIndex]),
                         link: `https://app.hypurr.fi/markets/pooled/999/${token.address}`,
+                    }
+                    markets.push(market)
+                }
+
+                // hyperbeat
+                const hyperbeatVaults = get().hyperbeatVaults
+                for (let vaultIndex = 0; vaultIndex < hyperbeatVaults.length; vaultIndex++) {
+                    const assetAddress = hyperbeatVaults[vaultIndex].token?.toLowerCase()
+                    const token = hyperswapTokenList.find((token) => token.address === assetAddress)
+                    if (!token) continue
+                    const market = {
+                        protocol: SupportedProtocolNames.HYPERBEAT,
+                        token,
+                        type: SupportedMarketTypes.VAULTS,
+                        rawData: {
+                            hyperbeat: hyperbeatVaults[vaultIndex],
+                        },
+                        state: {
+                            supply: { balance: 0, usd: hyperbeatVaults[vaultIndex].supplyUsd, apy: hyperbeatVaults[vaultIndex].supplyAPY },
+                            borrow: { balance: 0, usd: 0, apy: 0 },
+                            usage: 0,
+                        },
+                        link: `https://app.hyperbeat.org/vaults/${hyperbeatVaults[vaultIndex].id}`,
+                        purrsec: `https://purrsec.com/address/${hyperbeatVaults[vaultIndex].contract}`,
                     }
                     markets.push(market)
                 }

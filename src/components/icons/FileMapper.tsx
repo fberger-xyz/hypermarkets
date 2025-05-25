@@ -1,4 +1,4 @@
-import { FileIds, SupportedUnderlyingAssetSymbols } from '@/enums'
+import { FileIds, SupportedExplorers, SupportedUnderlyingAssetSymbols } from '@/enums'
 import { cn } from '@/utils'
 import { ReactNode } from 'react'
 import DarkThemeSVG from './DarkThemeSVG'
@@ -66,6 +66,12 @@ export default function FileMapper({
                 />
             </FileWrapper>
         )
+    if (props.id === SupportedProtocolNames.LIMINAL)
+        return (
+            <FileWrapper className={className}>
+                <Image src={`/protocols/${props.id.toLowerCase()}.png`} alt={`${props.id} logo`} sizes={sizes} fill className={`${className}`} />
+            </FileWrapper>
+        )
 
     // underlyings
     if (props.id === SupportedUnderlyingAssetSymbols.BTC)
@@ -97,6 +103,14 @@ export default function FileMapper({
                     fill
                     className={`${className} bg-default`}
                 />
+            </FileWrapper>
+        )
+
+    // explorers
+    if (props.id === SupportedExplorers.PURRSEC)
+        return (
+            <FileWrapper className={className}>
+                <Image src={`/underlyings/${props.id.toLowerCase()}.svg`} alt={`${props.id} logo`} sizes={sizes} fill className={className} />
             </FileWrapper>
         )
 
