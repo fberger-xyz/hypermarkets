@@ -21,7 +21,7 @@ import StyledTooltip from '../common/StyledTooltip'
 export default function Home() {
     const { uiAssets, uiProtocols, setMarkets, getMarkets, toggleUiUnderlyingAsset, toggleUiProtocol } = useAppStore()
     const [filteredMarkets, setFilteredMarkets] = useState<Market[]>([])
-    useQueries({
+    const [marketsQuery] = useQueries({
         queries: [
             {
                 queryKey: ['markets'],
@@ -145,122 +145,170 @@ export default function Home() {
                         </div>
 
                         {/* content */}
-                        {filteredMarkets.map((market, marketIndex) => (
-                            <div
-                                key={`${marketIndex}-${market.protocol}`}
-                                className={cn('px-2 py-1.5 grid grid-cols-10 items-center hover:bg-primary/20 font-light', {
-                                    'bg-default/5': marketIndex % 2,
-                                })}
-                            >
-                                <div className="flex justify-center">
-                                    <p className="text-xs">{marketIndex + 1}</p>
-                                </div>
-                                <div className="flex justify-center">
-                                    <div className="flex gap-2 items-center rounded-xl bg-default/10 py-1 px-1.5">
-                                        <TokenImage token={market.token} className="size-5 rounded-full bg-background" />
-                                        <p className="text-sm w-max truncate font-light text-primary">{market.token.symbol}</p>
-                                    </div>
-                                </div>
-                                <div className="flex justify-center">
-                                    {/* <StyledTooltip
+                        {filteredMarkets.length
+                            ? filteredMarkets.map((market, marketIndex) => (
+                                  <div
+                                      key={`${marketIndex}-${market.protocol}`}
+                                      className={cn('px-2 py-1.5 grid grid-cols-10 items-center hover:bg-primary/20 font-light', {
+                                          'bg-default/5': marketIndex % 2,
+                                      })}
+                                  >
+                                      <div className="flex justify-center">
+                                          <p className="text-xs">{marketIndex + 1}</p>
+                                      </div>
+                                      <div className="flex justify-center">
+                                          <div className="flex gap-2 items-center rounded-xl bg-default/10 py-1 px-1.5">
+                                              <TokenImage token={market.token} className="size-5 rounded-full bg-background" />
+                                              <p className="text-sm w-max truncate font-light text-primary">{market.token.symbol}</p>
+                                          </div>
+                                      </div>
+                                      <div className="flex justify-center">
+                                          {/* <StyledTooltip
                                     content={<IframeWrapper src={APP_PROTOCOLS[market.protocol]?.urls.website} />}
                                     disableAnimation
                                     closeDelay={200}
                                 > */}
-                                    <div className="flex gap-2 items-center rounded-xl bg-default/10 py-1 px-1.5">
-                                        <FileMapper id={market.protocol} className="size-5 rounded-full" />
-                                        <p className="text-sm w-max truncate font-light text-primary">{APP_PROTOCOLS[market.protocol]?.name}</p>
-                                    </div>
-                                    {/* </StyledTooltip> */}
-                                </div>
-                                <div className="flex justify-center">
-                                    <p className="text-xs">{market.type}</p>
-                                </div>
-                                <div className="flex justify-center">
-                                    <StyledTooltip
-                                        disableAnimation
-                                        content={<p className="text-sm">{numeral(market.state.supply.usd).format('0,0.00$')}</p>}
+                                          <div className="flex gap-2 items-center rounded-xl bg-default/10 py-1 px-1.5">
+                                              <FileMapper id={market.protocol} className="size-5 rounded-full" />
+                                              <p className="text-sm w-max truncate font-light text-primary">{APP_PROTOCOLS[market.protocol]?.name}</p>
+                                          </div>
+                                          {/* </StyledTooltip> */}
+                                      </div>
+                                      <div className="flex justify-center">
+                                          <p className="text-xs">{market.type}</p>
+                                      </div>
+                                      <div className="flex justify-center">
+                                          <StyledTooltip
+                                              disableAnimation
+                                              content={<p className="text-sm">{numeral(market.state.supply.usd).format('0,0.00$')}</p>}
+                                          >
+                                              <p className="text-sm">{numeral(market.state.supply.usd).format('0,0a$')}</p>
+                                          </StyledTooltip>
+                                      </div>
+                                      <div className="flex justify-center">
+                                          <div className="flex gap-2 items-center rounded-xl bg-default/10 py-1 px-1.5">
+                                              <p className="text-sm text-primary">{numeral(market.state.supply.apy).format('0,0.[00]%')}</p>
+                                          </div>
+                                      </div>
+                                      <div className="flex justify-center">
+                                          <StyledTooltip
+                                              disableAnimation
+                                              content={<p className="text-sm">{numeral(market.state.borrow.usd).format('0,0.00$')}</p>}
+                                          >
+                                              <p className="text-sm">{numeral(market.state.borrow.usd).format('0,0a$')}</p>
+                                          </StyledTooltip>
+                                      </div>
+                                      <div className="flex justify-center">
+                                          <div className="flex gap-2 items-center rounded-xl bg-default/10 py-1 px-1.5">
+                                              <p className="text-sm text-primary">{numeral(market.state.borrow.apy).format('0,0.[00]%')}</p>
+                                          </div>
+                                      </div>
+                                      <div className="flex justify-center">
+                                          <p className="text-sm">{numeral(market.state.usage).format('0,0%')}</p>
+                                      </div>
+                                      <div className="flex justify-center">
+                                          <LinkWrapper
+                                              href={market.link}
+                                              target="_blank"
+                                              className="flex justify-center opacity-50 hover:opacity-100 hover:text-primary hover:bg-default/10 px-2 py-1.5 rounded-lg"
+                                          >
+                                              <IconWrapper id={IconIds.WEBSITE} className="size-4" />
+                                          </LinkWrapper>
+                                      </div>
+                                  </div>
+                              ))
+                            : marketsQuery.isLoading
+                              ? [1, 2, 3, 4, 5, 6, 7, 8, 9].map((market, marketIndex) => (
+                                    <div
+                                        key={`${marketIndex}-${market}`}
+                                        className={cn('px-2 py-1.5 grid grid-cols-10 items-center hover:bg-primary/20 font-light', {
+                                            'bg-default/5': marketIndex % 2,
+                                        })}
                                     >
-                                        <p className="text-sm">{numeral(market.state.supply.usd).format('0,0a$')}</p>
-                                    </StyledTooltip>
-                                </div>
-                                <div className="flex justify-center">
-                                    <div className="flex gap-2 items-center rounded-xl bg-default/10 py-1 px-1.5">
-                                        <p className="text-sm text-primary">{numeral(market.state.supply.apy).format('0,0.[00]%')}</p>
+                                        <div className="flex justify-center">
+                                            <span className="skeleton-loading text-transparent w-6 h-[28px]" />
+                                        </div>
+                                        <div className="flex justify-center">
+                                            <div className="flex gap-2 items-center rounded-xl bg-default/10 py-1 px-1.5 skeleton-loading text-transparent w-14 h-[28px]"></div>
+                                        </div>
+                                        <div className="flex justify-center">
+                                            <div className="flex gap-2 items-center rounded-xl bg-default/10 py-1 px-1.5 skeleton-loading text-transparent w-14 h-[28px]"></div>
+                                        </div>
+                                        <div className="flex justify-center">
+                                            <span className="skeleton-loading text-transparent w-10 h-[28px]" />
+                                        </div>
+                                        <div className="flex justify-center">
+                                            <span className="skeleton-loading text-transparent w-10 h-[28px]" />
+                                        </div>
+                                        <div className="flex justify-center">
+                                            <span className="skeleton-loading text-transparent w-10 h-[28px]" />
+                                        </div>
+                                        <div className="flex justify-center">
+                                            <span className="skeleton-loading text-transparent w-10 h-[28px]" />
+                                        </div>
+                                        <div className="flex justify-center">
+                                            <span className="skeleton-loading text-transparent w-10 h-[28px]" />
+                                        </div>
+                                        <div className="flex justify-center">
+                                            <span className="skeleton-loading text-transparent w-10 h-[28px]" />
+                                        </div>
+                                        <div className="flex justify-center">
+                                            <span className="skeleton-loading text-transparent w-10 h-[28px]" />
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="flex justify-center">
-                                    <StyledTooltip
-                                        disableAnimation
-                                        content={<p className="text-sm">{numeral(market.state.borrow.usd).format('0,0.00$')}</p>}
-                                    >
-                                        <p className="text-sm">{numeral(market.state.borrow.usd).format('0,0a$')}</p>
-                                    </StyledTooltip>
-                                </div>
-                                <div className="flex justify-center">
-                                    <div className="flex gap-2 items-center rounded-xl bg-default/10 py-1 px-1.5">
-                                        <p className="text-sm text-primary">{numeral(market.state.borrow.apy).format('0,0.[00]%')}</p>
-                                    </div>
-                                </div>
-                                <div className="flex justify-center">
-                                    <p className="text-sm">{numeral(market.state.usage).format('0,0%')}</p>
-                                </div>
-                                <div className="flex justify-center">
-                                    <LinkWrapper
-                                        href={market.link}
-                                        target="_blank"
-                                        className="flex justify-center opacity-50 hover:opacity-100 hover:text-primary hover:bg-default/10 px-2 py-1.5 rounded-lg"
-                                    >
-                                        <IconWrapper id={IconIds.WEBSITE} className="size-4" />
-                                    </LinkWrapper>
-                                </div>
-                            </div>
-                        ))}
+                                ))
+                              : null}
 
                         {/* totals */}
-                        <div className="px-2 py-1.5 grid grid-cols-10 items-center hover:bg-primary/20 h-10 text-xs text-primary font-light pt-1">
-                            <div className="flex justify-start col-span-3">{/* <p>Totals or weighted averages</p> */}</div>
-                            <span />
-                            <div className="flex justify-center">
-                                <StyledTooltip
-                                    disableAnimation
-                                    content={
-                                        <p>{numeral(filteredMarkets.reduce((acc, curr) => (acc += curr.state.supply.usd), 0)).format('0,0.00')}</p>
-                                    }
-                                >
-                                    <p>{numeral(filteredMarkets.reduce((acc, curr) => (acc += curr.state.supply.usd), 0)).format('0,0a$')}</p>
-                                </StyledTooltip>
+                        {filteredMarkets.length === 0 && (
+                            <div className="px-2 py-1.5 grid grid-cols-10 items-center hover:bg-primary/20 h-10 text-xs text-primary font-light pt-1">
+                                <div className="flex justify-start col-span-3">{/* <p>Totals or weighted averages</p> */}</div>
+                                <span />
+                                <div className="flex justify-center">
+                                    <StyledTooltip
+                                        disableAnimation
+                                        content={
+                                            <p>
+                                                {numeral(filteredMarkets.reduce((acc, curr) => (acc += curr.state.supply.usd), 0)).format('0,0.00')}
+                                            </p>
+                                        }
+                                    >
+                                        <p>{numeral(filteredMarkets.reduce((acc, curr) => (acc += curr.state.supply.usd), 0)).format('0,0a$')}</p>
+                                    </StyledTooltip>
+                                </div>
+                                <div className="flex justify-center">
+                                    <p>
+                                        {numeral(filteredMarkets.reduce((acc, curr) => (acc += curr.state.supply.usd * curr.state.supply.apy), 0))
+                                            .divide(filteredMarkets.reduce((acc, curr) => (acc += curr.state.supply.usd), 0))
+                                            .format('0,0.[00]%')}
+                                    </p>
+                                </div>
+                                <div className="flex justify-center">
+                                    <StyledTooltip
+                                        disableAnimation
+                                        content={
+                                            <p>
+                                                {numeral(filteredMarkets.reduce((acc, curr) => (acc += curr.state.borrow.usd), 0)).format('0,0.00')}
+                                            </p>
+                                        }
+                                    >
+                                        <p>{numeral(filteredMarkets.reduce((acc, curr) => (acc += curr.state.borrow.usd), 0)).format('0,0a$')}</p>
+                                    </StyledTooltip>
+                                </div>
+                                <div className="flex justify-center">
+                                    <p>
+                                        {numeral(filteredMarkets.reduce((acc, curr) => (acc += curr.state.borrow.usd * curr.state.borrow.apy), 0))
+                                            .divide(filteredMarkets.reduce((acc, curr) => (acc += curr.state.borrow.usd), 0))
+                                            .format('0,0.[00]%')}
+                                    </p>
+                                </div>
+                                <span />
                             </div>
-                            <div className="flex justify-center">
-                                <p>
-                                    {numeral(filteredMarkets.reduce((acc, curr) => (acc += curr.state.supply.usd * curr.state.supply.apy), 0))
-                                        .divide(filteredMarkets.reduce((acc, curr) => (acc += curr.state.supply.usd), 0))
-                                        .format('0,0.[00]%')}
-                                </p>
-                            </div>
-                            <div className="flex justify-center">
-                                <StyledTooltip
-                                    disableAnimation
-                                    content={
-                                        <p>{numeral(filteredMarkets.reduce((acc, curr) => (acc += curr.state.borrow.usd), 0)).format('0,0.00')}</p>
-                                    }
-                                >
-                                    <p>{numeral(filteredMarkets.reduce((acc, curr) => (acc += curr.state.borrow.usd), 0)).format('0,0a$')}</p>
-                                </StyledTooltip>
-                            </div>
-                            <div className="flex justify-center">
-                                <p>
-                                    {numeral(filteredMarkets.reduce((acc, curr) => (acc += curr.state.borrow.usd * curr.state.borrow.apy), 0))
-                                        .divide(filteredMarkets.reduce((acc, curr) => (acc += curr.state.borrow.usd), 0))
-                                        .format('0,0.[00]%')}
-                                </p>
-                            </div>
-                            <span />
-                        </div>
+                        )}
                     </div>
 
                     <br />
-                    {filteredMarkets.length === 0 && (
+                    {!marketsQuery.isLoading && filteredMarkets.length === 0 && (
                         <div className="w-full">
                             <p className="font-light mx-auto text-center text-red-500">No markets ? Refresh page</p>
                         </div>
