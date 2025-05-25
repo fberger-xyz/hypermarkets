@@ -69,7 +69,7 @@ export default function FileMapper({
     if (props.id === SupportedProtocolNames.LIMINAL)
         return (
             <FileWrapper className={className}>
-                <Image src={`/protocols/${props.id.toLowerCase()}.png`} alt={`${props.id} logo`} sizes={sizes} fill className={`${className}`} />
+                <Image src={`/protocols/${props.id.toLowerCase()}.jpg`} alt={`${props.id} logo`} sizes={sizes} fill className={`${className}`} />
             </FileWrapper>
         )
 
