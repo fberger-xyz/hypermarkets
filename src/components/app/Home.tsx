@@ -8,7 +8,7 @@ import { FilterSection, FilterWrapper } from './Filters'
 import { IconIds, SupportedProtocolNames, SupportedUnderlyingAssetSymbols } from '@/enums'
 import FileMapper from '../icons/FileMapper'
 import { Market } from '@/interfaces'
-import { cn } from '@/utils'
+import { cn, extractErrorMessage } from '@/utils'
 import UpdatedAt from './UpdatedAt'
 import numeral from 'numeral'
 import AscDescFilters from './AscDescFilters'
@@ -17,26 +17,27 @@ import LinkWrapper from '../common/LinkWrapper'
 import IconWrapper from '../common/IconWrapper'
 import { APP_PROTOCOLS } from '@/config/protocols.config'
 import StyledTooltip from '../common/StyledTooltip'
+import toast from 'react-hot-toast'
 
 export default function Home() {
-    const { uiAssets, uiProtocols, setMarkets, getMarkets, toggleUiUnderlyingAsset, toggleUiProtocol } = useAppStore()
-    const [filteredMarkets, setFilteredMarkets] = useState<Market[]>([])
+    const { uiAssets, uiProtocols, appStoreRefreshedAt, setMarkets, getMarkets, toggleUiUnderlyingAsset, toggleUiProtocol } = useAppStore()
+    const getFilteredAndSortedMarkets = () =>
+        getMarkets()
+            .filter((market) => uiProtocols[market.protocol] && uiAssets[market.token.underlying])
+            .sort((curr, next) => next.state.supply.usd - curr.state.supply.usd)
+    const [filteredMarkets, setFilteredMarkets] = useState<Market[]>(getFilteredAndSortedMarkets())
     const [marketsQuery] = useQueries({
         queries: [
             {
-                queryKey: ['markets'],
+                queryKey: ['marketsQuery'],
                 enabled: true,
                 queryFn: async () => {
-                    const debug = false
                     try {
-                        if (debug) console.log('📡 Fetching new data...')
                         const markets = await fetchAllMarkets()
                         setMarkets(markets)
                         return markets
                     } catch (error) {
-                        console.log({ error })
-                    } finally {
-                        if (debug) console.log('🔄 Cleaning up fetch state.')
+                        toast.error(`Markets query: ${extractErrorMessage(error)}`)
                     }
                 },
                 refetchOnWindowFocus: true,
@@ -46,12 +47,9 @@ export default function Home() {
         ],
     })
     useEffect(() => {
-        const filteredMarkets = getMarkets()
-            .filter((market) => uiProtocols[market.protocol] && uiAssets[market.token.underlying])
-            .sort((curr, next) => next.state.supply.usd - curr.state.supply.usd)
-        setFilteredMarkets(filteredMarkets)
+        setFilteredMarkets(getFilteredAndSortedMarkets())
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [uiAssets, uiProtocols])
+    }, [uiAssets, uiProtocols, appStoreRefreshedAt])
 
     /**
      * - 1 cool table: code arrows
@@ -145,7 +143,7 @@ export default function Home() {
                         </div>
 
                         {/* content */}
-                        {filteredMarkets.length
+                        {filteredMarkets.length > 0
                             ? filteredMarkets.map((market, marketIndex) => (
                                   <div
                                       key={`${marketIndex}-${market.protocol}`}
