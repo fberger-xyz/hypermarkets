@@ -31,10 +31,10 @@ export const APP_PAGES: InterfaceAppLink[] = [
         name: 'APYs',
         path: AppUrls.APYS,
     },
-    {
-        name: 'Referrals',
-        path: AppUrls.REFERRALS,
-    },
+    // {
+    //     name: 'Referrals',
+    //     path: AppUrls.REFERRALS,
+    // },
 ]
 
 /**

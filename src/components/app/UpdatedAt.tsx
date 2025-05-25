@@ -10,7 +10,7 @@ export default function UpdatedAt() {
         <div className="mx-auto text-primary font-light text-sm">
             {appStoreRefreshedAt > 0 && !timeago.includes('year') ? (
                 <div className="flex flex-col items-center">
-                    <p>Markets data refreshed every 30s</p>
+                    <p>Markets data pooled every 30s</p>
                     <p className="text-default/40 text-xs">Last update: {timeago}</p>
                 </div>
             ) : (
