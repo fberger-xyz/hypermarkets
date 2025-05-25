@@ -1,7 +1,7 @@
 import { DefiLlamaCategories, SupportedProtocolNames, SupportedUnderlyingAssetSymbols } from '@/enums'
 import dayjs, { Dayjs } from 'dayjs'
 
-type ProtocolURLs = Partial<Record<'website' | 'x' | 'telegram' | 'discord' | 'docs' | 'git', string>>
+type ProtocolURLs = Partial<Record<'website' | 'x' | 'telegram' | 'discord' | 'docs' | 'git' | 'ref', string>>
 export const APP_PROTOCOLS: Partial<
     Record<
         SupportedProtocolNames,
@@ -40,6 +40,7 @@ export const APP_PROTOCOLS: Partial<
         urls: {
             website: 'https://hyperlend.finance',
             docs: 'https://docs.hyperlend.finance/',
+            ref: 'https://app.hyperlend.finance/?ref=HYPERMARKETS',
         },
         fork: {
             // 'https://governance.aave.com/t/temp-check-recognize-hyperlend-as-a-friendly-fork/20969'

@@ -205,13 +205,35 @@ export default function Home() {
                                           <p className="text-sm">{numeral(market.state.usage).format('0,0%')}</p>
                                       </div>
                                       <div className="flex justify-center">
-                                          <LinkWrapper
-                                              href={market.link}
-                                              target="_blank"
-                                              className="flex justify-center opacity-50 hover:opacity-100 hover:text-primary hover:bg-default/10 px-2 py-1.5 rounded-lg"
+                                          <StyledTooltip
+                                              disableAnimation
+                                              closeDelay={800}
+                                              content={
+                                                  <div className="flex flex-col gap-1">
+                                                      <LinkWrapper
+                                                          href={market.link}
+                                                          target="_blank"
+                                                          className="flex justify-center hover:text-primary bg-default/5 hover:bg-default/10 px-4 py-1.5 rounded-lg gap-1"
+                                                      >
+                                                          <p className="text-sm">See this market on {market.protocol}</p>
+                                                          <IconWrapper id={IconIds.OPEN_LINK_IN_NEW_TAB} className="size-4" />
+                                                      </LinkWrapper>
+                                                      {APP_PROTOCOLS[market.protocol]?.urls.ref ? (
+                                                          <LinkWrapper
+                                                              href={APP_PROTOCOLS[market.protocol]?.urls.ref}
+                                                              target="_blank"
+                                                              className="flex justify-center hover:text-primary bg-default/5 hover:bg-default/10 px-4 py-1.5 rounded-lg gap-1"
+                                                          >
+                                                              <p className="text-sm text-emerald-400">Also use my REFERAL</p>
+                                                          </LinkWrapper>
+                                                      ) : null}
+                                                  </div>
+                                              }
                                           >
-                                              <IconWrapper id={IconIds.WEBSITE} className="size-4" />
-                                          </LinkWrapper>
+                                              <div className="flex justify-center opacity-50 hover:opacity-100 hover:text-primary hover:bg-default/10 px-2 py-1.5 rounded-lg cursor-pointer">
+                                                  <IconWrapper id={IconIds.WEBSITE} className="size-4" />
+                                              </div>
+                                          </StyledTooltip>
                                       </div>
                                   </div>
                               ))

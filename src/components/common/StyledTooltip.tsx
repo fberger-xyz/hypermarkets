@@ -42,7 +42,7 @@ export default function StyledTooltip({
     placement = 'top',
     disableAnimation = false,
     className,
-    delay = 0,
+    delay = 200,
     closeDelay = 0,
     showArrow = true,
     isDisabled = false,
