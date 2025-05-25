@@ -58,7 +58,7 @@ export default function HeaderMobile() {
                     </button>
 
                     {/* logo */}
-                    <p className="text-lg font-light tracking-wider">{APP_METADATA.SITE_NAME}</p>
+                    <p className="text-lg font-light tracking-wider">{APP_METADATA.SITE_NAME} 🛒</p>
                 </div>
 
                 {/* right */}

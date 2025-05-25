@@ -16,6 +16,9 @@ import { ThemeProvider } from 'next-themes'
 import { AppThemes } from '@/enums'
 
 export const metadata: Metadata = {
+    icons: {
+        icon: '/favicon.svg',
+    },
     title: APP_METADATA.SITE_NAME,
     description: APP_METADATA.SITE_DESCRIPTION,
     metadataBase: new URL(APP_METADATA.SITE_URL),

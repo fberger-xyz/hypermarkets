@@ -45,7 +45,7 @@ export default function Footer(props: { className?: string }) {
             <div className="flex flex-col lg:flex-row gap-1 lg:gap-8 items-center">
                 {/* author */}
                 <p className="opacity-50 hover:opacity-100 transition-all duration-300 ease-in-out">
-                    Made by
+                    By
                     <StyledTooltip placement="top" closeDelay={500} content={<IframeWrapper src={AppUrls.AUTHOR_WEBSITE} />}>
                         <LinkWrapper href={AppUrls.AUTHOR_WEBSITE} target="_blank" className="cursor-alias hover:underline hover:text-primary pl-1">
                             @fberger_xyz

@@ -45,7 +45,7 @@ export default function HeaderDesktop(props: { className?: string }) {
                 </button>
 
                 {/* logo */}
-                <p className="text-sm font-light tracking-wider">{APP_METADATA.SITE_NAME}</p>
+                <p className="text-sm font-light tracking-wider">{APP_METADATA.SITE_NAME} 🛒</p>
             </div>
 
             {/* middle */}
