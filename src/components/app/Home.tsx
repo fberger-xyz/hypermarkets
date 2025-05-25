@@ -40,6 +40,7 @@ export default function Home() {
                     }
                 },
                 refetchOnWindowFocus: true,
+                refetchOnMount: true,
                 refetchInterval: 1000 * 30,
             },
         ],
@@ -80,10 +81,13 @@ export default function Home() {
                             isActive={Boolean(uiProtocols[key])}
                             tooltipContent={
                                 <div className="flex flex-col items-center">
-                                    <p>{key}</p>
-                                    {/* <p className="underline text-default/50 mb-2">
-                                        {APP_PROTOCOLS[key]?.urls.website?.replace('https://', '').replace('www.', '')}
-                                    </p> */}
+                                    <LinkWrapper
+                                        href={APP_PROTOCOLS[key]?.urls.website}
+                                        target="_blank"
+                                        className="flex justify-center px-2 py-1.5 rounded-lg hover:text-primary"
+                                    >
+                                        <p className="underline">{APP_PROTOCOLS[key]?.urls.website}</p>
+                                    </LinkWrapper>
                                 </div>
                             }
                         >

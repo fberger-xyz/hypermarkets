@@ -18,7 +18,7 @@ interface FilterWrapperProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 
 export const FilterWrapper: React.FC<FilterWrapperProps> = ({ isActive, tooltipContent, ...props }) => {
     return (
-        <StyledTooltip content={tooltipContent} disableAnimation placement="bottom">
+        <StyledTooltip content={tooltipContent} disableAnimation closeDelay={200} placement="bottom">
             <button
                 {...props}
                 className={cn('rounded-xl px-3 py-2 cursor-pointer border-2', {
