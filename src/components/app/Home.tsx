@@ -61,7 +61,7 @@ export default function Home() {
         <div className="flex flex-col w-full gap-8 md:gap-10">
             {/* filters */}
             <div className="flex flex-col items-center md:flex-row md:flex-wrap gap-6 md:gap-10 mx-auto px-4">
-                <FilterSection title="Assets exposure">
+                <FilterSection title="Exposure">
                     {(Object.keys(uiAssets) as SupportedUnderlyingAssetSymbols[]).map((key, keyIndex) => (
                         <FilterWrapper
                             key={`${key}-${keyIndex}`}
@@ -100,7 +100,7 @@ export default function Home() {
             {/* content */}
             <div className="flex flex-col gap-6">
                 <UpdatedAt />
-                <div className="w-full overflow-x-scroll px-4 ">
+                <div className="w-full overflow-x-scroll px-4 lg:px-0">
                     <div className="flex flex-col border rounded-xl border-default/10 shadow-lg min-w-[1100px]">
                         {/* headers */}
                         <div className="gap-2 px-2 py-2 grid grid-cols-10 items-center text-default text-xs border-b border-default/10 pb-1">
