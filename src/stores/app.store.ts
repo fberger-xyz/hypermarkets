@@ -4,7 +4,7 @@ import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import { APP_METADATA, IS_DEV } from '@/config/app.config'
 import { EnrichedHyperbeatVault, EnrichedMorphobeatVault, Market } from '@/interfaces'
-import { SupportedMarketTypes, SupportedProtocolNames, SupportedUnderlyingAssetSymbols } from '@/enums'
+import { MarketsSortedBy, MarketsSortedByDirection, SupportedMarketTypes, SupportedProtocolNames, SupportedUnderlyingAssetSymbols } from '@/enums'
 import { hyperswapTokenList } from '@/data/hardcoded-tokens-list'
 import { AaveFormattedReserve } from '@/types'
 import { APP_PROTOCOLS, APP_UNDERLYINGS } from '@/config/protocols.config'
@@ -30,6 +30,11 @@ export const useAppStore = create<{
     toggleUiUnderlyingAsset: (asset: SupportedUnderlyingAssetSymbols) => void
     uiProtocols: Partial<Record<SupportedProtocolNames, boolean>>
     toggleUiProtocol: (protocol: SupportedProtocolNames) => void
+    marketsSortedBy: MarketsSortedBy
+    setMarketsSortedBy: (marketsSortedBy: MarketsSortedBy) => void
+    marketsSortedByDirection: MarketsSortedByDirection
+    setMarketsSortedByDirection: (marketsSortedByDirection: MarketsSortedByDirection) => void
+    setMarketsSort: (marketsSortedBy: MarketsSortedBy, marketsSortedByDirection: MarketsSortedByDirection) => void
 
     /**
      * markets
@@ -71,10 +76,13 @@ export const useAppStore = create<{
                 .filter((underlying) => underlying.integrated)
                 .reduce((acc, underlying) => ({ ...acc, [underlying.symbol]: true }), {}),
             toggleUiUnderlyingAsset: (asset) => set((state) => ({ uiAssets: { ...state.uiAssets, [asset]: !state.uiAssets[asset] } })),
-            uiProtocols: Object.values(APP_PROTOCOLS)
-                // .filter((protocol) => protocol.integrated)
-                .reduce((acc, protocol) => ({ ...acc, [protocol.name]: true }), {}),
+            uiProtocols: Object.values(APP_PROTOCOLS).reduce((acc, protocol) => ({ ...acc, [protocol.name]: true }), {}),
             toggleUiProtocol: (protocol) => set((state) => ({ uiProtocols: { ...state.uiProtocols, [protocol]: !state.uiProtocols[protocol] } })),
+            marketsSortedBy: MarketsSortedBy.SUPPLIED_USD,
+            setMarketsSortedBy: (marketsSortedBy) => set(() => ({ marketsSortedBy })),
+            marketsSortedByDirection: MarketsSortedByDirection.DESC,
+            setMarketsSortedByDirection: (marketsSortedByDirection) => set(() => ({ marketsSortedByDirection })),
+            setMarketsSort: (marketsSortedBy, marketsSortedByDirection) => set(() => ({ marketsSortedBy, marketsSortedByDirection })),
 
             /**
              * markets
@@ -84,10 +92,10 @@ export const useAppStore = create<{
             hypurrfiReserves: [],
             hyperbeatVaults: [],
             setMarkets: (data) =>
-                set(() => ({
-                    hyperlendReserves: data.hyperlendReserves,
-                    hypurrfiReserves: data.hypurrfiReserves,
-                    hyperbeatVaults: data.hyperbeatVaults,
+                set((state) => ({
+                    hyperlendReserves: data.hyperlendReserves.length ? data.hyperlendReserves : state.hyperlendReserves,
+                    hypurrfiReserves: data.hypurrfiReserves.length ? data.hypurrfiReserves : state.hypurrfiReserves,
+                    hyperbeatVaults: data.hyperbeatVaults.length ? data.hyperbeatVaults : state.hyperbeatVaults,
                     appStoreRefreshedAt: Date.now(),
                 })),
 

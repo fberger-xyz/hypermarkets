@@ -34,30 +34,30 @@ export const metadata: Metadata = {
         siteName: APP_METADATA.SITE_NAME,
         description: APP_METADATA.SITE_DESCRIPTION,
         url: APP_METADATA.SITE_URL,
-        images: [
-            {
-                url: '/tba.png',
-                width: 1100,
-                height: 400,
-                alt: 'Alt',
-                type: 'image/png',
-            },
-        ],
+        // images: [
+        //     {
+        //         url: '/background.jpg',
+        //         width: 1100,
+        //         height: 400,
+        //         alt: 'Alt',
+        //         type: 'image/jpg',
+        //     },
+        // ],
     },
     twitter: {
         card: 'summary_large_image',
         site: '@fberger_xyz',
         title: APP_METADATA.SITE_NAME,
         description: APP_METADATA.SITE_DESCRIPTION,
-        images: [
-            {
-                url: '/tba.png',
-                width: 1100,
-                height: 400,
-                alt: 'Alt',
-                type: 'image/png',
-            },
-        ],
+        // images: [
+        //     {
+        //         url: '/background.jpg',
+        //         width: 1100,
+        //         height: 400,
+        //         alt: 'Alt',
+        //         type: 'image/jpg',
+        //     },
+        // ],
     },
 }
 
@@ -67,19 +67,27 @@ export default async function RootLayout({
     children: React.ReactNode
 }>) {
     return (
-        <html
-            lang="en"
-            suppressHydrationWarning
-            className="h-screen w-screen bg-background"
-            // style={{
-            //     backgroundImage: "url('/tba.svg')",
-            //     backgroundSize: 'cover',
-            //     backgroundRepeat: 'no-repeat',
-            //     backgroundPosition: 'center top',
-            //     backgroundAttachment: 'fixed',
-            // }}
-        >
-            <body className={cn(INTER_FONT.className, INTER_FONT.variable, 'min-h-screen w-full overflow-x-auto overflow-y-auto text-default')}>
+        <html lang="en" suppressHydrationWarning className="h-screen w-screen bg-background">
+            <body
+                className={cn(
+                    INTER_FONT.className,
+                    INTER_FONT.variable,
+                    'relative h-screen w-screen bg-background overflow-x-auto overflow-y-auto text-default',
+                )}
+            >
+                <div
+                    className="fixed inset-0 z-0"
+                    style={{
+                        backgroundImage: "url('/background.jpg')",
+                        backgroundSize: 'cover',
+                        backgroundRepeat: 'no-repeat',
+                        backgroundPosition: 'center top',
+                        backgroundAttachment: 'fixed',
+                        filter: 'blur(6px)',
+                        opacity: 0.05,
+                        pointerEvents: 'none',
+                    }}
+                />
                 <ThemeProvider attribute="class" defaultTheme="system" disableTransitionOnChange themes={Object.values(AppThemes)}>
                     <WagmiAndReactQueryProviders>
                         <main className="relative">
@@ -94,7 +102,7 @@ export default async function RootLayout({
                             <Suspense fallback={null}>
                                 <Footer />
                             </Suspense>
-                            <Toaster position="bottom-right" reverseOrder={true} />
+                            <Toaster position="bottom-center" reverseOrder={true} />
                         </main>
                     </WagmiAndReactQueryProviders>
                 </ThemeProvider>

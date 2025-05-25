@@ -2,37 +2,35 @@ import { DefiLlamaCategories, SupportedProtocolNames, SupportedUnderlyingAssetSy
 import dayjs, { Dayjs } from 'dayjs'
 
 type ProtocolURLs = Partial<Record<'website' | 'x' | 'telegram' | 'discord' | 'docs' | 'git' | 'ref', string>>
-export const APP_PROTOCOLS: Partial<
-    Record<
-        SupportedProtocolNames,
-        {
-            // meta
-            name: SupportedProtocolNames
+export const APP_PROTOCOLS: Record<
+    SupportedProtocolNames,
+    {
+        // meta
+        name: SupportedProtocolNames
+        urls: ProtocolURLs
+        fork?: {
+            from: string
             urls: ProtocolURLs
-            fork?: {
-                from: string
-                urls: ProtocolURLs
-            }
-
-            // app
-            index: number
-            integrated: boolean
-
-            // defillama
-            defillama?: {
-                protocolId: string
-                category: DefiLlamaCategories
-            }
-
-            // points program
-            points?: {
-                started: boolean
-                url: string
-                since?: Dayjs
-                announcement?: string
-            }
         }
-    >
+
+        // app
+        index: number
+        integrated: boolean
+
+        // defillama
+        defillama?: {
+            protocolId: string
+            category: DefiLlamaCategories
+        }
+
+        // points program
+        points?: {
+            started: boolean
+            url: string
+            since?: Dayjs
+            announcement?: string
+        }
+    }
 > = {
     [SupportedProtocolNames.HYPERLEND]: {
         // meta

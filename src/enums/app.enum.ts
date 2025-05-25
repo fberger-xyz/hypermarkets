@@ -17,3 +17,16 @@ export enum AppThemes {
     LIGHT = 'light',
     DARK = 'dark',
 }
+
+export enum MarketsSortedBy {
+    SUPPLIED_USD = 'SUPPLIED_USD',
+    SUPPLY_APY = 'SUPPLY_APY',
+    BORROWED_USD = 'BORROWED_USD',
+    BORROW_APY = 'BORROW_APY',
+    USAGE = 'USAGE',
+}
+
+export enum MarketsSortedByDirection {
+    ASC = 'ASC',
+    DESC = 'DESC',
+}

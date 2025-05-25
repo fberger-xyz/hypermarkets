@@ -3,7 +3,7 @@ export enum SupportedProtocolNames {
     HYPERLEND = 'Hyperlend',
     FELIX = 'Felix',
     HYPURRFI = 'HypurrFi',
-    MORPHO = 'Morpho',
+    // MORPHO = 'Morpho',
     HYPERSWAP = 'HyperSwap',
     HYPERBEAT = 'Hyperbeat',
     LIMINAL = 'Liminal',
@@ -30,10 +30,11 @@ export enum SupportedUnderlyingAssetSymbols {
 }
 
 export enum SupportedMarketTypes {
-    POOLED_LENDING = 'Pooled lending',
+    // POOLED_LENDING = 'Pooled lending',
+    POOLED_LENDING = 'Aave fork',
     ISOLATED_LENDING = 'Isolated lending',
     STABILITY_POOLS = 'Stability pools',
-    VAULTS = 'Vault',
+    VAULTS = 'Curated vault',
 }
 
 export enum HyperbeatVaults {

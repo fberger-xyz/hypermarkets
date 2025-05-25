@@ -22,10 +22,10 @@ export const FilterWrapper: React.FC<FilterWrapperProps> = ({ isActive, integrat
         <StyledTooltip content={tooltipContent} disableAnimation closeDelay={500} placement="bottom">
             <button
                 {...props}
-                className={cn('rounded-xl px-3 py-2 cursor-pointer border-2', {
+                className={cn('rounded-xl px-3 py-2 cursor-pointer border-2 transition-all duration-300 ease-in-out', {
                     'border-primary': integrated && isActive,
-                    'border-default/50 grayscale hover:grayscale-0 opacity-30': integrated && !isActive,
-                    'border-default/50 grayscale opacity-30 cursor-not-allowed': !integrated,
+                    'border-default/20 grayscale opacity-80 hover:opacity-100 hover:grayscale-0': integrated && !isActive,
+                    'border-default/20 grayscale opacity-30 cursor-not-allowed': !integrated,
                 })}
             >
                 {props.children}

@@ -44,7 +44,7 @@ export default function FileMapper({
                     alt={`${props.id} logo`}
                     sizes={sizes}
                     fill
-                    className={`${className} bg-default/50`}
+                    className={`${className} bg-white/40`}
                 />
             </FileWrapper>
         )
@@ -62,7 +62,7 @@ export default function FileMapper({
                     alt={`${props.id} logo`}
                     sizes={sizes}
                     fill
-                    className={`${className} bg-default/50`}
+                    className={`${className} bg-white/90`}
                 />
             </FileWrapper>
         )

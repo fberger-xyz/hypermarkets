@@ -2,9 +2,8 @@ import { SITE_DOMAIN } from '@/config/app.config'
 import { fetchWithTimeout, initOutput } from './requests.util'
 import { extractErrorMessage } from './error.util'
 import { EnrichedHyperbeatVault, EnrichedMorphobeatVault, MarketState, StructuredOutput } from '@/interfaces'
-import toast from 'react-hot-toast'
 import { AaveFormattedReserve } from '@/types'
-import { SupportedProtocolNames } from '@/enums'
+import { MarketsSortedByDirection } from '@/enums'
 
 /**
  * one fn per protocol
@@ -19,7 +18,7 @@ export async function fetchHyperlendReserves(): Promise<StructuredOutput<AaveFor
         const responseJson = (await response.json()) as StructuredOutput<AaveFormattedReserve[]>
         output.data = responseJson.data
         output.success = true
-        if (output.data?.length) toast.success(`${SupportedProtocolNames.HYPERLEND}: ${output.data?.length} markets refreshed`)
+        // if (output.data?.length) toast.success(`${SupportedProtocolNames.HYPERLEND}: ${output.data?.length} markets refreshed`)
     } catch (error) {
         output.error = extractErrorMessage(error)
         console.error(fnName, { error: output.error })
@@ -36,7 +35,7 @@ export async function fetchHypurrFiReserves(): Promise<StructuredOutput<AaveForm
         const responseJson = (await response.json()) as StructuredOutput<AaveFormattedReserve[]>
         output.data = responseJson.data
         output.success = true
-        if (output.data?.length) toast.success(`${SupportedProtocolNames.HYPURRFI}: ${output.data?.length} markets refreshed`)
+        // if (output.data?.length) toast.success(`${SupportedProtocolNames.HYPURRFI}: ${output.data?.length} markets refreshed`)
     } catch (error) {
         output.error = extractErrorMessage(error)
         console.error(fnName, { error: output.error })
@@ -53,7 +52,7 @@ export async function fetchHyperbeatVaults(): Promise<StructuredOutput<(Enriched
         const responseJson = (await response.json()) as StructuredOutput<(EnrichedHyperbeatVault | EnrichedMorphobeatVault)[]>
         output.data = responseJson.data?.filter((vault) => !!vault.address)
         output.success = true
-        if (output.data?.length) toast.success(`${SupportedProtocolNames.HYPERBEAT}: ${output.data.length} vaults refreshed`)
+        // if (output.data?.length) toast.success(`${SupportedProtocolNames.HYPERBEAT}: ${output.data.length} vaults refreshed`)
     } catch (error) {
         output.error = extractErrorMessage(error)
         console.error(fnName, { error: output.error })
@@ -133,3 +132,5 @@ export const getMarketStateForAaveForks = (reserve: AaveFormattedReserve): Marke
     // -
     return state
 }
+
+export const sortMarkets = (direction: MarketsSortedByDirection, a: number, b: number) => (direction === MarketsSortedByDirection.ASC ? a - b : b - a)

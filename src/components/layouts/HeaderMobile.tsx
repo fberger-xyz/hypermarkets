@@ -123,6 +123,14 @@ export default function HeaderMobile() {
                                     <p className="truncate">Hyperliquid</p>
                                     <IconWrapper id={IconIds.OPEN_LINK_IN_NEW_TAB} className="size-5" />
                                 </LinkWrapper>
+                                <LinkWrapper
+                                    href={AppUrls.HYPERUNIT}
+                                    target="_blank"
+                                    className="gap-2 p-4 items-center hover:bg-default/10 rounded-xl cursor-pointer w-full flex justify-center opacity-70 hover:opacity-100"
+                                >
+                                    <p className="truncate">Hyperunit</p>
+                                    <IconWrapper id={IconIds.OPEN_LINK_IN_NEW_TAB} className="size-5" />
+                                </LinkWrapper>
                             </nav>
                         </Suspense>
                     </div>
