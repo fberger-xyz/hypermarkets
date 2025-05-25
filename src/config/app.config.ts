@@ -18,7 +18,7 @@ export const SITE_URL = SITE_DOMAIN.replace('www.', '')
 export const APP_METADATA = {
     SITE_NAME,
     SITE_DOMAIN,
-    SITE_DESCRIPTION: 'SITE_DESCRIPTION',
+    SITE_DESCRIPTION: 'HyperEVM money markets with my referrals 😄',
     SITE_URL: SITE_URL,
 }
 
