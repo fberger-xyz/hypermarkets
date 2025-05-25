@@ -7,13 +7,14 @@ import utc from 'dayjs/plugin/utc'
 dayjs.extend(utc)
 dayjs.extend(relativeTime)
 
-import { cn, getDurationBetween } from '@/utils'
+import { cn } from '@/utils'
 import LinkWrapper from '../common/LinkWrapper'
 import { AppUrls, IconIds } from '@/enums'
 import IframeWrapper from '../common/IframeWrapper'
 import StyledTooltip from '../common/StyledTooltip'
 import { SITE_URL } from '@/config/app.config'
 import IconWrapper from '../common/IconWrapper'
+import DeployedAt from '../app/DeployedAt'
 
 export default function Footer(props: { className?: string }) {
     const [commitDate, setCommitDate] = useState<null | Date>(null)
@@ -37,11 +38,7 @@ export default function Footer(props: { className?: string }) {
                 <p className="truncate opacity-50 hover:opacity-100 transition-all duration-300 ease-in-out">
                     2025 © {SITE_URL.replace('https://', '')}
                 </p>
-                <StyledTooltip closeDelay={500} content={<p>Deployed on {dayjs.utc(commitDate).format('D MMM. YYYY HH:mm A')} UTC</p>}>
-                    <p className="opacity-50 hover:opacity-100 transition-all duration-300 ease-in-out">
-                        Last deployed: {getDurationBetween({ startTs: dayjs.utc(commitDate).unix(), endTs: dayjs.utc().unix() }).humanize} ago
-                    </p>
-                </StyledTooltip>
+                <DeployedAt commitDate={commitDate} />
             </div>
 
             {/* right */}

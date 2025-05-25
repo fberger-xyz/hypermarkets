@@ -1,7 +1,7 @@
 'use client'
 
 import { useQueries } from '@tanstack/react-query'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { fetchAllMarkets } from '@/utils/markets.util'
 import { useAppStore } from '@/stores/app.store'
 import { FilterSection, FilterWrapper } from './Filters'
@@ -21,7 +21,6 @@ import StyledTooltip from '../common/StyledTooltip'
 export default function Home() {
     const { uiAssets, uiProtocols, setMarkets, getMarkets, toggleUiUnderlyingAsset, toggleUiProtocol } = useAppStore()
     const [filteredMarkets, setFilteredMarkets] = useState<Market[]>([])
-    const isFetchingRef = useRef(false)
     useQueries({
         queries: [
             {
@@ -29,9 +28,7 @@ export default function Home() {
                 enabled: true,
                 queryFn: async () => {
                     const debug = false
-                    if (isFetchingRef.current) return console.log('⚠️ Already fetching, skipping this call.')
                     try {
-                        isFetchingRef.current = true
                         if (debug) console.log('📡 Fetching new data...')
                         const markets = await fetchAllMarkets()
                         setMarkets(markets)
@@ -40,7 +37,6 @@ export default function Home() {
                         console.log({ error })
                     } finally {
                         if (debug) console.log('🔄 Cleaning up fetch state.')
-                        isFetchingRef.current = false
                     }
                 },
                 refetchOnWindowFocus: true,
@@ -55,7 +51,6 @@ export default function Home() {
     }, [uiAssets, uiProtocols])
 
     /**
-     * - 1 centered row with last update: ...
      * - 1 cool table
      * - 1 cool bg: https://drip.trade/collections/hypio
      * - powered by evm
@@ -65,7 +60,6 @@ export default function Home() {
         <div className="flex flex-col w-full gap-10">
             {/* filters */}
             <div className="flex flex-wrap gap-10 mx-auto">
-                {/* filters */}
                 <FilterSection title="Assets exposure">
                     {(Object.keys(uiAssets) as SupportedUnderlyingAssetSymbols[]).map((key, keyIndex) => (
                         <FilterWrapper
@@ -78,8 +72,6 @@ export default function Home() {
                         </FilterWrapper>
                     ))}
                 </FilterSection>
-
-                {/* - */}
                 <FilterSection title="HyperEVM money markets">
                     {(Object.keys(uiProtocols) as SupportedProtocolNames[]).map((key, keyIndex) => (
                         <FilterWrapper
@@ -219,9 +211,7 @@ export default function Home() {
 
                     {/* totals */}
                     <div className="px-2 py-1.5 grid grid-cols-10 items-center hover:bg-primary/20 h-10 text-xs text-primary font-light pt-1">
-                        <div className="flex justify-start col-span-3">
-                            <p>Totals or weighted averages</p>
-                        </div>
+                        <div className="flex justify-start col-span-3">{/* <p>Totals or weighted averages</p> */}</div>
                         <span />
                         <div className="flex justify-center">
                             <StyledTooltip

@@ -1,7 +1,10 @@
 import { cn } from '@/utils'
+// import { Suspense } from 'react'
+// import { DefaultFallbackContent } from '../layouts/DefaultFallback'
 
 export default function PageWrapper({ children, className, ...props }: { children: React.ReactNode; className?: string; showQuote?: boolean }) {
     return (
+        // <Suspense fallback={DefaultFallbackContent()}>
         <div
             {...props}
             className={cn(
@@ -11,5 +14,6 @@ export default function PageWrapper({ children, className, ...props }: { childre
         >
             {children}
         </div>
+        // </Suspense>
     )
 }
