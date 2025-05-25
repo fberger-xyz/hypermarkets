@@ -68,13 +68,13 @@ export default async function RootLayout({
             lang="en"
             suppressHydrationWarning
             className="h-screen w-screen bg-background"
-            style={{
-                backgroundImage: "url('/tba.svg')",
-                backgroundSize: 'cover',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'center top',
-                backgroundAttachment: 'fixed',
-            }}
+            // style={{
+            //     backgroundImage: "url('/tba.svg')",
+            //     backgroundSize: 'cover',
+            //     backgroundRepeat: 'no-repeat',
+            //     backgroundPosition: 'center top',
+            //     backgroundAttachment: 'fixed',
+            // }}
         >
             <body className={cn(INTER_FONT.className, INTER_FONT.variable, 'min-h-screen w-full overflow-x-auto overflow-y-auto text-default')}>
                 <ThemeProvider attribute="class" defaultTheme="system" disableTransitionOnChange themes={Object.values(AppThemes)}>

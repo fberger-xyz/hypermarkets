@@ -27,31 +27,43 @@ export default function FileMapper({
     if (props.id === SupportedProtocolNames.HYPERLEND)
         return (
             <FileWrapper className={className}>
-                <Image src={`/protocols/${props.id}.png`} alt={`${props.id} logo`} sizes={sizes} fill className={className} />
+                <Image src={`/protocols/${props.id.toLowerCase()}.png`} alt={`${props.id} logo`} sizes={sizes} fill className={className} />
             </FileWrapper>
         )
     if (props.id === SupportedProtocolNames.FELIX)
         return (
             <FileWrapper className={className}>
-                <Image src={`/protocols/${props.id}.jpeg`} alt={`${props.id} logo`} sizes={sizes} fill className={className} />
+                <Image src={`/protocols/${props.id.toLowerCase()}.jpeg`} alt={`${props.id} logo`} sizes={sizes} fill className={className} />
             </FileWrapper>
         )
     if (props.id === SupportedProtocolNames.HYPURRFI)
         return (
             <FileWrapper className={className}>
-                <Image src={`/protocols/${props.id}.png`} alt={`${props.id} logo`} sizes={sizes} fill className={`${className} bg-default/50`} />
+                <Image
+                    src={`/protocols/${props.id.toLowerCase()}.png`}
+                    alt={`${props.id} logo`}
+                    sizes={sizes}
+                    fill
+                    className={`${className} bg-default/50`}
+                />
             </FileWrapper>
         )
     if (props.id === SupportedProtocolNames.HYPERSWAP)
         return (
             <FileWrapper className={className}>
-                <Image src={`/protocols/${props.id}.jpeg`} alt={`${props.id} logo`} sizes={sizes} fill className={className} />
+                <Image src={`/protocols/${props.id.toLowerCase()}.jpeg`} alt={`${props.id} logo`} sizes={sizes} fill className={className} />
             </FileWrapper>
         )
     if (props.id === SupportedProtocolNames.HYPERBEAT)
         return (
             <FileWrapper className={className}>
-                <Image src={`/protocols/${props.id}.png`} alt={`${props.id} logo`} sizes={sizes} fill className={`${className} bg-default/50`} />
+                <Image
+                    src={`/protocols/${props.id.toLowerCase()}.png`}
+                    alt={`${props.id} logo`}
+                    sizes={sizes}
+                    fill
+                    className={`${className} bg-default/50`}
+                />
             </FileWrapper>
         )
 
