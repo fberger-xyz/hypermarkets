@@ -18,49 +18,31 @@ export const SITE_URL = SITE_DOMAIN.replace('www.', '')
 export const APP_METADATA = {
     SITE_NAME,
     SITE_DOMAIN,
-    SITE_DESCRIPTION: 'HyperEVM money markets with my referrals 😄',
+    SITE_DESCRIPTION: 'HyperEVM money markets with some referrals 😄',
     SITE_URL: SITE_URL,
 }
-
-/**
- * pages
- */
 
 export const APP_PAGES: InterfaceAppLink[] = [
     {
         name: 'APYs',
         path: AppUrls.APYS,
     },
-    // {
-    //     name: 'Referrals',
-    //     path: AppUrls.REFERRALS,
-    // },
-]
-
-/**
- * fonts
- */
+] as const
 
 export const INTER_FONT = Inter({
     weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
     subsets: ['latin'],
     variable: '--font-inter',
+    display: 'swap',
+    preload: true,
 })
 
-/**
- * analytics
- */
+export const GOOGLE_ANALYTICS_ID = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || ''
 
-export const GOOGLE_ANALYTICS_ID = ''
-
-/**
- * colors
- */
-
-export const APP_THEMES: Partial<Record<AppThemes, { index: number; iconId: IconIds; svgId: FileIds }>> = {
+export const APP_THEMES: Record<AppThemes, { index: number; iconId: IconIds; svgId: FileIds }> = {
     [AppThemes.LIGHT]: { index: 0, iconId: IconIds.THEME_LIGHT, svgId: FileIds.THEME_LIGHT },
     [AppThemes.DARK]: { index: 1, iconId: IconIds.THEME_DARK, svgId: FileIds.THEME_DARK },
-}
+} as const
 
 const fullConfig = resolveConfig(tailwindConfig as Config)
 export const AppColors = fullConfig.theme.colors as DefaultColors & {
@@ -68,10 +50,6 @@ export const AppColors = fullConfig.theme.colors as DefaultColors & {
     primary: '#96FBE4'
     default: '#FFFFFF'
 }
-
-/**
- * toasts
- */
 
 export const toastStyle = {
     borderRadius: '10px',
@@ -83,7 +61,7 @@ export const toastStyle = {
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     maxWidth: '800px',
-}
+} as const
 
 /**
  * RPCs
