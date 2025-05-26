@@ -5,14 +5,7 @@ import { useMemo, useCallback, memo, useState, useEffect } from 'react'
 import { fetchAllMarkets } from '@/utils/markets.util'
 import { useAppStore } from '@/stores/app.store'
 import { FilterSection, FilterWrapper } from './Filters'
-import {
-    IconIds,
-    MarketsSortedBy,
-    MarketsSortedByDirection,
-    SupportedExplorers,
-    SupportedProtocolNames,
-    SupportedUnderlyingAssetSymbols,
-} from '@/enums'
+import { IconIds, MarketsSortedBy, MarketsSortedByDirection, SupportedProtocolNames, SupportedUnderlyingAssetSymbols } from '@/enums'
 import FileMapper from '../icons/FileMapper'
 import { Market } from '@/interfaces'
 import { cleanOutput, cn, extractErrorMessage } from '@/utils'
@@ -43,7 +36,7 @@ const MarketRow = memo(({ market, index }: { market: Market; index: number }) =>
             >
                 <TokenImage token={market.token} className="size-5 rounded-full bg-background" />
                 <p className="text-sm w-max truncate font-light text-primary">{market.token.symbol}</p>
-                <div className="absolute inset-0 backdrop-blur hidden group-hover:flex justify-center items-center rounded-xl text-xs">
+                <div className="absolute inset-0 backdrop-blur hidden group-hover:flex justify-center items-center rounded-xl text-xs cursor-alias">
                     <p className="font-light">Purrsec</p>
                     <IconWrapper id={IconIds.OPEN_LINK_IN_NEW_TAB} className="size-3.5" />
                 </div>
@@ -57,7 +50,7 @@ const MarketRow = memo(({ market, index }: { market: Market; index: number }) =>
             >
                 <FileMapper id={market.protocol} className="size-5 rounded-full" />
                 <p className="text-sm w-max font-light text-primary">{APP_PROTOCOLS[market.protocol]?.name}</p>
-                <div className="absolute inset-0 backdrop-blur hidden group-hover:flex justify-center items-center rounded-xl text-xs">
+                <div className="absolute inset-0 backdrop-blur hidden group-hover:flex justify-center items-center rounded-xl text-xs cursor-alias">
                     <p className="font-light truncate">{market.protocol}</p>
                     <IconWrapper id={IconIds.OPEN_LINK_IN_NEW_TAB} className="size-3.5" />
                 </div>
@@ -74,7 +67,7 @@ const MarketRow = memo(({ market, index }: { market: Market; index: number }) =>
         <div className="flex justify-center">
             <div
                 className={cn('flex gap-2 items-center rounded-xl py-0.5 px-1.5', {
-                    'bg-default/10': market.state.supply.apy >= 0.01,
+                    'bg-default/10': market.state.supply.apy >= 0.00005,
                 })}
             >
                 <p className="text-sm text-primary">{cleanOutput(numeral(market.state.supply.apy).format('0,0.[00]%'))}</p>
@@ -88,7 +81,7 @@ const MarketRow = memo(({ market, index }: { market: Market; index: number }) =>
         <div className="flex justify-center">
             <div
                 className={cn('flex gap-2 items-center rounded-xl py-0.5 px-1.5', {
-                    'bg-default/10': market.state.borrow.apy >= 0.01,
+                    'bg-default/10': market.state.borrow.apy >= 0.00005,
                 })}
             >
                 <p className="text-sm text-primary">{cleanOutput(numeral(market.state.borrow.apy).format('0,0.[00]%'))}</p>
@@ -98,7 +91,7 @@ const MarketRow = memo(({ market, index }: { market: Market; index: number }) =>
             <p className="text-sm">{cleanOutput(numeral(market.state.usage).format('0,0%'))}</p>
         </div>
         <div className="flex justify-center">
-            <StyledTooltip
+            {/* <StyledTooltip
                 disableAnimation
                 closeDelay={800}
                 content={
@@ -136,7 +129,18 @@ const MarketRow = memo(({ market, index }: { market: Market; index: number }) =>
                 <div className="flex justify-center opacity-50 hover:opacity-100 hover:text-primary hover:bg-default/10 px-2 py-1.5 rounded-xl cursor-pointer">
                     <IconWrapper id={IconIds.LINK} className="size-5" />
                 </div>
-            </StyledTooltip>
+            </StyledTooltip> */}
+            {APP_PROTOCOLS[market.protocol]?.urls.ref ? (
+                <LinkWrapper
+                    href={APP_PROTOCOLS[market.protocol]?.urls.ref}
+                    target="_blank"
+                    className="flex bg-default/5 text-primary justify-center hover:bg-default/20 px-2 py-1 rounded-xl gap-1 cursor-alias transition-all duration-200 ease-in-out"
+                >
+                    <p className="text-sm font-bold">❤️</p>
+                </LinkWrapper>
+            ) : (
+                <p className="text-default text-xs opacity-50">soon</p>
+            )}
         </div>
     </div>
 ))
@@ -193,7 +197,7 @@ const TableHeader = memo(
                 </button>
             ))}
             <div className="flex justify-center items-center">
-                <p className="opacity-50 font-light">Links</p>
+                <p className="opacity-50 font-light">Referrals</p>
             </div>
         </div>
     ),

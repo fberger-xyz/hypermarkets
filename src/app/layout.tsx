@@ -78,6 +78,7 @@ export default async function RootLayout({
                 <div
                     className="fixed inset-0 z-0"
                     style={{
+                        // https://www.youtube.com/watch?v=IuTBQRfnIvI&list=RDIuTBQRfnIvI&t=897s
                         backgroundImage: "url('/background.jpg')",
                         backgroundSize: 'cover',
                         backgroundRepeat: 'no-repeat',
