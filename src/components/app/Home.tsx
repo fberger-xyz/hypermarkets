@@ -26,7 +26,7 @@ const MarketRow = memo(({ market, index }: { market: Market; index: number }) =>
         })}
     >
         <div className="flex justify-center">
-            <p className="text-xs">{index + 1}</p>
+            <p className="text-default text-xs opacity-50">{index + 1}</p>
         </div>
         <div className="flex justify-center">
             <LinkWrapper
