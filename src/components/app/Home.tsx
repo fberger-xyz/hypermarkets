@@ -21,14 +21,14 @@ import toast from 'react-hot-toast'
 // memoized marketrow component
 const MarketRow = memo(({ market, index }: { market: Market; index: number }) => (
     <div
-        className={cn('px-2 py-1.5 grid grid-cols-10 items-center hover:bg-primary/20 font-light transition-all duration-200', {
+        className={cn('px-2 grid grid-cols-10 items-center hover:bg-primary/20 font-light transition-all duration-200', {
             'bg-default/5': index % 2,
         })}
     >
         <div className="flex justify-center">
             <p className="text-default text-xs opacity-50">{index + 1}</p>
         </div>
-        <div className="flex justify-center">
+        <div className="flex justify-center py-1.5">
             <LinkWrapper
                 href={`https://purrsec.com/address/${market.token.address}`}
                 target="_blank"
@@ -57,14 +57,14 @@ const MarketRow = memo(({ market, index }: { market: Market; index: number }) =>
             </LinkWrapper>
         </div>
         <div className="flex justify-center">
-            <p className="text-xs">{market.type}</p>
+            <p className="text-default text-xs opacity-50">{market.type}</p>
         </div>
         <div className="flex justify-center">
             <StyledTooltip disableAnimation content={<p className="text-sm">{numeral(market.state.supply.usd).format('0,0.00$')}</p>}>
                 <p className="text-sm">{cleanOutput(numeral(market.state.supply.usd).format('0,0a$'))}</p>
             </StyledTooltip>
         </div>
-        <div className="flex justify-center">
+        <div className="flex justify-center bg-default/5 h-full items-center">
             <div
                 className={cn('flex gap-2 items-center rounded-xl py-0.5 px-1.5', {
                     'bg-default/10': market.state.supply.apy >= 0.00005,
@@ -78,7 +78,7 @@ const MarketRow = memo(({ market, index }: { market: Market; index: number }) =>
                 <p className="text-sm">{cleanOutput(numeral(market.state.borrow.usd).format('0,0a$'))}</p>
             </StyledTooltip>
         </div>
-        <div className="flex justify-center">
+        <div className="flex justify-center bg-default/5 h-full items-center">
             <div
                 className={cn('flex gap-2 items-center rounded-xl py-0.5 px-1.5', {
                     'bg-default/10': market.state.borrow.apy >= 0.00005,
@@ -158,8 +158,8 @@ const TableHeader = memo(
         marketsSortedByDirection: MarketsSortedByDirection
         onSort: (sortBy: MarketsSortedBy) => void
     }) => (
-        <div className="gap-2 px-2 py-2 grid grid-cols-10 items-center text-default text-xs border-b border-default/10 pb-1">
-            <div className="flex justify-center items-center">
+        <div className="grid grid-cols-10 items-center text-default text-xs border-b border-default/10 px-2">
+            <div className="flex justify-center items-center py-2">
                 <p className="font-light opacity-50">#</p>
             </div>
             <div className="flex justify-center items-center">
@@ -172,13 +172,13 @@ const TableHeader = memo(
                 <p className="font-light opacity-50">Type</p>
             </div>
             {[
-                { sortBy: MarketsSortedBy.SUPPLIED_USD, label: 'Supplied' },
-                { sortBy: MarketsSortedBy.SUPPLY_APY, label: 'Supply API' },
-                { sortBy: MarketsSortedBy.BORROWED_USD, label: 'Borrowed' },
-                { sortBy: MarketsSortedBy.BORROW_APY, label: 'Borrow API' },
-                { sortBy: MarketsSortedBy.USAGE, label: 'Usage' },
-            ].map(({ sortBy, label }) => (
-                <button key={sortBy} className="flex gap-1 justify-center items-center col-span-1" onClick={() => onSort(sortBy)}>
+                { sortBy: MarketsSortedBy.SUPPLIED_USD, label: 'Supplied', className: '' },
+                { sortBy: MarketsSortedBy.SUPPLY_APY, label: 'Supply API', className: 'bg-default/5 h-full' },
+                { sortBy: MarketsSortedBy.BORROWED_USD, label: 'Borrowed', className: '' },
+                { sortBy: MarketsSortedBy.BORROW_APY, label: 'Borrow API', className: 'bg-default/5 h-full' },
+                { sortBy: MarketsSortedBy.USAGE, label: 'Usage', className: '' },
+            ].map(({ sortBy, label, className }) => (
+                <button key={sortBy} className={cn('flex gap-1 justify-center items-center col-span-1', className)} onClick={() => onSort(sortBy)}>
                     <p className={cn({ 'opacity-50 font-light': marketsSortedBy !== sortBy })}>{label}</p>
                     <div className="flex flex-col">
                         <IconWrapper
@@ -397,7 +397,7 @@ export default function Home() {
 
                         {/* Totals */}
                         {totals && (
-                            <div className="px-2 py-1.5 grid grid-cols-10 items-center hover:bg-primary/20 h-10 text-xs text-primary font-light pt-1">
+                            <div className="px-2 grid grid-cols-10 items-center hover:bg-primary/20 h-10 text-xs text-primary font-light border-t border-default/10">
                                 <div className="flex justify-start col-span-3" />
                                 <span />
                                 <div className="flex justify-center">
@@ -405,7 +405,7 @@ export default function Home() {
                                         <p>{numeral(totals.totalSupplyUsd).format('0,0a$')}</p>
                                     </StyledTooltip>
                                 </div>
-                                <div className="flex justify-center">
+                                <div className="flex justify-center bg-default/5 h-full items-center py-1.5">
                                     <p>{numeral(totals.weightedSupplyApy).format('0,0.[00]%')}</p>
                                 </div>
                                 <div className="flex justify-center">
@@ -413,7 +413,7 @@ export default function Home() {
                                         <p>{numeral(totals.totalBorrowUsd).format('0,0a$')}</p>
                                     </StyledTooltip>
                                 </div>
-                                <div className="flex justify-center">
+                                <div className="flex justify-center bg-default/5 h-full items-center">
                                     <p>{numeral(totals.weightedBorrowApy).format('0,0.[00]%')}</p>
                                 </div>
                                 <span />
