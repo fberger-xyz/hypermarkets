@@ -67,7 +67,13 @@ export const toastStyle = {
  * RPCs
  */
 
-export const RPCS = ['https://hyperliquid.drpc.org', 'https://hl-mainnet.rpc.p2p.world/evm']
+export const RPCS = [
+    'https://rpc.hyperlend.finance',
+    'https://hyperliquid.drpc.org',
+    'https://rpc.hypurrscan.io',
+    'https://hl-mainnet.rpc.p2p.world/evm',
+    'https://rpc.hyperliquid.xyz/evm',
+]
 
 /**
  * Explorers
