@@ -169,6 +169,7 @@ export const APP_PROTOCOLS: Record<
             x: 'https://x.com/0xhyperbeat',
             docs: 'https://docs.hyperbeat.org/',
             discord: 'https://discord.com/invite/0xhyperbeat',
+            ref: 'https://app.hyperbeat.org/earn?referral=DE579276',
         },
 
         // app
