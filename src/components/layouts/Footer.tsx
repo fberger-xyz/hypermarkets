@@ -56,6 +56,16 @@ export default function Footer(props: { className?: string }) {
             <div className="flex flex-col lg:flex-row gap-1 lg:gap-8 items-center">
                 {/* unit */}
                 <LinkWrapper
+                    href={AppUrls.HL_ECOSYSTEM}
+                    target="_blank"
+                    className="flex items-center gap-1 cursor-alias hover:underline opacity-50 hover:opacity-100 transition-all duration-300 ease-in-out"
+                >
+                    <p className="truncate">Ecosystem</p>
+                    <IconWrapper id={IconIds.OPEN_LINK_IN_NEW_TAB} className="size-4" />
+                </LinkWrapper>
+
+                {/* unit */}
+                <LinkWrapper
                     href={AppUrls.HYPERUNIT}
                     target="_blank"
                     className="flex items-center gap-1 cursor-alias hover:underline opacity-50 hover:opacity-100 transition-all duration-300 ease-in-out"
