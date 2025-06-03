@@ -309,7 +309,7 @@ export default function Home() {
     }, [filteredMarkets])
 
     return (
-        <div className="flex flex-col w-full gap-8 md:gap-10">
+        <div className="flex flex-col w-full gap-8 md:gap-10 mt-10">
             {/* filters */}
             <div className="flex flex-col items-center md:flex-row md:flex-wrap gap-6 md:gap-10 mx-auto px-4">
                 <FilterSection title="Exposure">
