@@ -71,6 +71,7 @@ export const APP_PROTOCOLS: Record<
         urls: {
             website: 'https://usefelix.xyz/borrow',
             docs: 'https://usefelix.gitbook.io/felix-docs',
+            ref: 'https://usefelix.xyz?ref=36F2BFC5',
         },
         fork: {
             from: 'Liquity v2',
