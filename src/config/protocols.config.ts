@@ -100,7 +100,8 @@ export const APP_PROTOCOLS: Record<
         // meta
         name: SupportedProtocolNames.HYPURRFI,
         urls: {
-            website: 'https://www.hypurr.fi',
+            // website: 'https://www.hypurr.fi',
+            website: 'https://app.hypurr.fi/buddies/D7A25D7',
             x: 'https://x.com/hypurrfi',
             telegram: 'https://t.me/+YvsBvSxlQrVhNDkx',
             docs: 'https://docs.hypurr.fi/introduction/hypurrfi',
@@ -125,7 +126,7 @@ export const APP_PROTOCOLS: Record<
         // points program
         points: {
             started: true,
-            url: 'https://app.hypurr.fi/points',
+            url: 'https://app.hypurr.fi/buddies/D7A25D7',
         },
     },
     [SupportedProtocolNames.HYPERSWAP]: {
