@@ -5,7 +5,7 @@ export enum AppUrls {
 
     // HL
     HYPERUNIT = 'https://app.hyperunit.xyz/',
-    HL_APP = 'https://app.hyperliquid.xyz/trade',
+    HL_APP = 'https://app.hyperliquid.xyz/join/HYPERMARKETS',
     HL_ECOSYSTEM = 'https://www.hypurr.co/ecosystem-map',
 
     // fberger
