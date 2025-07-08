@@ -138,6 +138,7 @@ export const APP_PROTOCOLS: Record<
             docs: 'https://docs.hyperswap.exchange/hyperswap',
             discord: 'https://discord.com/invite/hyperswap',
             git: 'https://github.com/HyperSwapX',
+            ref: 'https://app.hyperswap.exchange/#/swap?referral=fberger',
         },
         fork: {
             from: 'Uniswap',
