@@ -34,26 +34,29 @@ export async function GET() {
         const vaults = (await fetchResponse.json()) as (HyperbeatVault | MorphobeatVault)[]
         const enrichedVaults = vaults.map((vault): EnrichedHyperbeatVault | EnrichedMorphobeatVault => {
             if ('address' in vault) {
+                const morphoVault = vault as MorphobeatVault
                 return {
-                    ...vault,
-                    id: vault.address,
+                    ...morphoVault,
+                    id: morphoVault.address,
                     provider: HyperbeatVaults.MORPHO as const,
                     supplyAPY: 0.25,
-                    supplyUsd: vault.totalSupply,
+                    supplyUsd: morphoVault.totalSupply,
                     token: '',
-                    contract: vault.address,
+                    contract: morphoVault.address,
                 }
             } else {
+                const hyperbeatVault = vault as HyperbeatVault
+                const vaultData = HYPERBEAT_VAULTS_DATA.find((data) => data.id === hyperbeatVault.name)
                 return {
-                    ...vault,
-                    id: vault.name,
+                    ...hyperbeatVault,
+                    id: hyperbeatVault.name,
                     provider: HyperbeatVaults.NATIVE as const,
-                    address: HYPERBEAT_VAULTS_DATA.find((data) => data.id === vault.name)?.contract ?? '',
-                    supplyAPY: HYPERBEAT_VAULTS_DATA.find((data) => data.id === vault.name)?.supplyAPY ?? -1,
-                    name: HYPERBEAT_VAULTS_DATA.find((data) => data.id === vault.name)?.name ?? '',
-                    supplyUsd: vault.totalValueInUSD,
-                    token: HYPERBEAT_VAULTS_DATA.find((data) => data.id === vault.name)?.token ?? '',
-                    contract: HYPERBEAT_VAULTS_DATA.find((data) => data.id === vault.name)?.contract ?? '',
+                    address: vaultData?.contract ?? '',
+                    supplyAPY: vaultData?.supplyAPY ?? -1,
+                    name: vaultData?.name ?? hyperbeatVault.name,
+                    supplyUsd: hyperbeatVault.totalValueInUSD,
+                    token: vaultData?.token ?? '',
+                    contract: vaultData?.contract ?? '',
                 }
             }
         })

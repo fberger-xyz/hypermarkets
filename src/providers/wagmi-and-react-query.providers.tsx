@@ -9,13 +9,31 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ConnectKitProvider } from 'connectkit'
 import { config } from './wagmi'
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            // Disable queries during SSR to prevent hydration issues
+            staleTime: 60 * 1000, // 1 minute
+            refetchOnWindowFocus: false,
+        },
+    },
+})
 
 export function WagmiAndReactQueryProviders({ children }: { children: React.ReactNode }) {
+    const [mounted, setMounted] = React.useState(false)
+    
+    React.useEffect(() => {
+        setMounted(true)
+    }, [])
+
     return (
         <WagmiProvider config={config}>
             <QueryClientProvider client={queryClient}>
-                <ConnectKitProvider>{children}</ConnectKitProvider>
+                {mounted ? (
+                    <ConnectKitProvider>{children}</ConnectKitProvider>
+                ) : (
+                    children
+                )}
             </QueryClientProvider>
         </WagmiProvider>
     )

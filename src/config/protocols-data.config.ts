@@ -13,7 +13,14 @@ export const PROTOCOL_CONTRACTS = {
     },
 } as const
 
-export const HYPERBEAT_VAULTS_DATA = [
+export const HYPERBEAT_VAULTS_DATA: {
+    id: string
+    name: string
+    provider: HyperbeatVaults.NATIVE
+    contract: string
+    supplyAPY: number
+    token: string
+}[] = [
     // {
     //     id: 'usdt',
     //     name: 'Hyperbeat USDT',
@@ -38,7 +45,7 @@ export const HYPERBEAT_VAULTS_DATA = [
     //     supplyAPY: 0.025,
     //     token: '0x9FDBdA0A5e284c32744D2f17Ee5c74B284993463',
     // },
-] as const
+]
 
 export const EXTERNAL_APIS = {
     hyperbeat: 'https://app.hyperbeat.org/api/combinedTvl',
