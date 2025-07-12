@@ -1,34 +1,8 @@
 import { HyperbeatVaults, SupportedProtocolNames } from '@/enums'
 import { EnrichedHyperbeatVault, EnrichedMorphobeatVault, HyperbeatVault, MorphobeatVault } from '@/interfaces'
 import { fetchWithTimeout, initOutput } from '@/utils'
+import { HYPERBEAT_VAULTS_DATA, EXTERNAL_APIS } from '@/config/protocols-data.config'
 import { NextResponse } from 'next/server'
-
-const hardcodedHyperbeatVaultsData = [
-    {
-        id: 'usdt',
-        name: 'Hyperbeat USDT',
-        provider: HyperbeatVaults.NATIVE,
-        contract: '0x5e105266db42f78fa814322bce7f388b4c2e61eb',
-        supplyAPY: 0.25,
-        token: '0xB8CE59FC3717ada4C02eaDF9682A9e934F625ebb',
-    },
-    {
-        id: 'hype',
-        name: 'Hyperbeat Ultra HYPE',
-        provider: HyperbeatVaults.NATIVE,
-        contract: '0x96c6cbb6251ee1c257b2162ca0f39aa5fa44b1fb',
-        supplyAPY: 0.06,
-        token: '0x5555555555555555555555555555555555555555',
-    },
-    {
-        id: 'ubtc',
-        name: 'Hyperbeat Ultra UBTC',
-        provider: HyperbeatVaults.NATIVE,
-        contract: '0xc061d38903b99ac12713b550c2cb44b221674f94',
-        supplyAPY: 0.025,
-        token: '0x9FDBdA0A5e284c32744D2f17Ee5c74B284993463',
-    },
-]
 
 export async function GET() {
     // prepare the response object
@@ -40,7 +14,7 @@ export async function GET() {
         if (debug) console.log(`fetching ${SupportedProtocolNames.HYPERBEAT} ...`)
 
         // run req
-        const url = 'https://app.hyperbeat.org/api/combinedTvl'
+        const url = EXTERNAL_APIS.hyperbeat
         const fetchResponse = await fetchWithTimeout(url, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
@@ -74,12 +48,12 @@ export async function GET() {
                     ...vault,
                     id: vault.name,
                     provider: HyperbeatVaults.NATIVE as const,
-                    address: hardcodedHyperbeatVaultsData.find((data) => data.id === vault.name)?.contract ?? '',
-                    supplyAPY: hardcodedHyperbeatVaultsData.find((data) => data.id === vault.name)?.supplyAPY ?? -1,
-                    name: hardcodedHyperbeatVaultsData.find((data) => data.id === vault.name)?.name ?? '',
+                    address: HYPERBEAT_VAULTS_DATA.find((data) => data.id === vault.name)?.contract ?? '',
+                    supplyAPY: HYPERBEAT_VAULTS_DATA.find((data) => data.id === vault.name)?.supplyAPY ?? -1,
+                    name: HYPERBEAT_VAULTS_DATA.find((data) => data.id === vault.name)?.name ?? '',
                     supplyUsd: vault.totalValueInUSD,
-                    token: hardcodedHyperbeatVaultsData.find((data) => data.id === vault.name)?.token ?? '',
-                    contract: hardcodedHyperbeatVaultsData.find((data) => data.id === vault.name)?.contract ?? '',
+                    token: HYPERBEAT_VAULTS_DATA.find((data) => data.id === vault.name)?.token ?? '',
+                    contract: HYPERBEAT_VAULTS_DATA.find((data) => data.id === vault.name)?.contract ?? '',
                 }
             }
         })

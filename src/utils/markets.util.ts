@@ -1,64 +1,21 @@
-import { SITE_DOMAIN } from '@/config/app.config'
-import { fetchWithTimeout, initOutput } from './requests.util'
-import { extractErrorMessage } from './error.util'
 import { EnrichedHyperbeatVault, EnrichedMorphobeatVault, MarketState, StructuredOutput } from '@/interfaces'
 import { AaveFormattedReserve } from '@/types'
 import { MarketsSortedByDirection } from '@/enums'
+import { createProtocolFetcher, PROTOCOL_CONFIGS } from './protocol-fetcher.util'
+import { extractErrorMessage } from './error.util'
 
 /**
  * one fn per protocol
  */
 
-export async function fetchHyperlendReserves(): Promise<StructuredOutput<AaveFormattedReserve[]>> {
-    const fnName = 'fetchHyperlendReserves'
-    const output = initOutput<AaveFormattedReserve[]>()
-    try {
-        const response = await fetchWithTimeout(`${SITE_DOMAIN}/api/protocols/hyperlend/markets`)
-        if (!response.ok) throw new Error(`${fnName}: !response.ok`)
-        const responseJson = (await response.json()) as StructuredOutput<AaveFormattedReserve[]>
-        output.data = responseJson.data
-        output.success = true
-        // if (output.data?.length) toast.success(`${SupportedProtocolNames.HYPERLEND}: ${output.data?.length} markets refreshed`)
-    } catch (error) {
-        output.error = extractErrorMessage(error)
-        console.error(fnName, { error: output.error })
-    }
-    return output
-}
+export const fetchHyperlendReserves = (): Promise<StructuredOutput<AaveFormattedReserve[]>> =>
+    createProtocolFetcher<AaveFormattedReserve>(PROTOCOL_CONFIGS.hyperlend)
 
-export async function fetchHypurrFiReserves(): Promise<StructuredOutput<AaveFormattedReserve[]>> {
-    const fnName = 'fetchHypurrFiReserves'
-    const output = initOutput<AaveFormattedReserve[]>()
-    try {
-        const response = await fetchWithTimeout(`${SITE_DOMAIN}/api/protocols/hypurrfi/pooled-markets`)
-        if (!response.ok) throw new Error(`${fnName}: !response.ok`)
-        const responseJson = (await response.json()) as StructuredOutput<AaveFormattedReserve[]>
-        output.data = responseJson.data
-        output.success = true
-        // if (output.data?.length) toast.success(`${SupportedProtocolNames.HYPURRFI}: ${output.data?.length} markets refreshed`)
-    } catch (error) {
-        output.error = extractErrorMessage(error)
-        console.error(fnName, { error: output.error })
-    }
-    return output
-}
+export const fetchHypurrFiReserves = (): Promise<StructuredOutput<AaveFormattedReserve[]>> =>
+    createProtocolFetcher<AaveFormattedReserve>(PROTOCOL_CONFIGS.hypurrfi)
 
-export async function fetchHyperbeatVaults(): Promise<StructuredOutput<(EnrichedHyperbeatVault | EnrichedMorphobeatVault)[]>> {
-    const fnName = 'fetchHyperbeatVaults'
-    const output = initOutput<(EnrichedHyperbeatVault | EnrichedMorphobeatVault)[]>()
-    try {
-        const response = await fetchWithTimeout(`${SITE_DOMAIN}/api/protocols/hyperbeat/vaults`)
-        if (!response.ok) throw new Error(`${fnName}: !response.ok`)
-        const responseJson = (await response.json()) as StructuredOutput<(EnrichedHyperbeatVault | EnrichedMorphobeatVault)[]>
-        output.data = responseJson.data?.filter((vault) => !!vault.address)
-        output.success = true
-        // if (output.data?.length) toast.success(`${SupportedProtocolNames.HYPERBEAT}: ${output.data.length} vaults refreshed`)
-    } catch (error) {
-        output.error = extractErrorMessage(error)
-        console.error(fnName, { error: output.error })
-    }
-    return output
-}
+export const fetchHyperbeatVaults = (): Promise<StructuredOutput<(EnrichedHyperbeatVault | EnrichedMorphobeatVault)[]>> =>
+    createProtocolFetcher<EnrichedHyperbeatVault | EnrichedMorphobeatVault>(PROTOCOL_CONFIGS.hyperbeat)
 
 /**
  * call all fns

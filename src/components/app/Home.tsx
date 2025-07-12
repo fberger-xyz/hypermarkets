@@ -9,6 +9,7 @@ import { IconIds, MarketsSortedBy, MarketsSortedByDirection, SupportedProtocolNa
 import FileMapper from '../icons/FileMapper'
 import { Market } from '@/interfaces'
 import { cleanOutput, cn, extractErrorMessage } from '@/utils'
+import { filterAndSortMarkets } from '@/utils/market-sorting.util'
 import UpdatedAt from './UpdatedAt'
 import numeral from 'numeral'
 import TokenImage from './TokenImage'
@@ -237,36 +238,17 @@ export default function Home() {
 
     // get markets matching filters
     const filterMarkets = () => {
-        const markets = getMarkets().filter((market) => uiProtocols[market.protocol] && uiAssets[market.token.underlying])
-        return markets.sort((curr, next) => {
-            const a =
-                marketsSortedBy === MarketsSortedBy.SUPPLIED_USD
-                    ? curr.state.supply.usd
-                    : marketsSortedBy === MarketsSortedBy.SUPPLY_APY
-                      ? curr.state.supply.apy
-                      : marketsSortedBy === MarketsSortedBy.BORROWED_USD
-                        ? curr.state.borrow.usd
-                        : marketsSortedBy === MarketsSortedBy.BORROW_APY
-                          ? curr.state.borrow.apy
-                          : marketsSortedBy === MarketsSortedBy.USAGE
-                            ? curr.state.usage
-                            : 0
-
-            const b =
-                marketsSortedBy === MarketsSortedBy.SUPPLIED_USD
-                    ? next.state.supply.usd
-                    : marketsSortedBy === MarketsSortedBy.SUPPLY_APY
-                      ? next.state.supply.apy
-                      : marketsSortedBy === MarketsSortedBy.BORROWED_USD
-                        ? next.state.borrow.usd
-                        : marketsSortedBy === MarketsSortedBy.BORROW_APY
-                          ? next.state.borrow.apy
-                          : marketsSortedBy === MarketsSortedBy.USAGE
-                            ? next.state.usage
-                            : 0
-
-            return marketsSortedByDirection === MarketsSortedByDirection.ASC ? a - b : b - a
-        })
+        return filterAndSortMarkets(
+            getMarkets(),
+            {
+                protocols: uiProtocols,
+                assets: uiAssets,
+            },
+            {
+                sortBy: marketsSortedBy,
+                direction: marketsSortedByDirection,
+            },
+        )
     }
 
     useEffect(() => {
