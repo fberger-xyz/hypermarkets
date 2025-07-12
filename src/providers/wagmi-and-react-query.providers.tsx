@@ -21,20 +21,14 @@ const queryClient = new QueryClient({
 
 export function WagmiAndReactQueryProviders({ children }: { children: React.ReactNode }) {
     const [mounted, setMounted] = React.useState(false)
-    
+
     React.useEffect(() => {
         setMounted(true)
     }, [])
 
     return (
         <WagmiProvider config={config}>
-            <QueryClientProvider client={queryClient}>
-                {mounted ? (
-                    <ConnectKitProvider>{children}</ConnectKitProvider>
-                ) : (
-                    children
-                )}
-            </QueryClientProvider>
+            <QueryClientProvider client={queryClient}>{mounted ? <ConnectKitProvider>{children}</ConnectKitProvider> : children}</QueryClientProvider>
         </WagmiProvider>
     )
 }
