@@ -200,6 +200,7 @@ export const APP_PROTOCOLS: Record<
             telegram: 'https://t.me/liminalmoney',
             docs: 'https://docs.liminal.money/',
             discord: 'https://discord.com/invite/mEg5xTdXQv',
+            ref: 'https://liminal.money/join/FBERGER',
         },
 
         // app
